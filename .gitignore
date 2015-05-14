@@ -1,5 +1,8 @@
 # Don't commit Mac filesystem junk!
 .DS_Store
 
+# Don't commit JetBrains project junk!
+.idea
+
 # This is a personal config file which will differ from user to user
 config.json
