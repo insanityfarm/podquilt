@@ -1,0 +1,5 @@
+# Don't commit Mac filesystem junk!
+.DS_Store
+
+# This is a personal config file which will differ from user to user
+config.json
