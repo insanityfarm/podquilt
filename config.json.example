@@ -1,0 +1,23 @@
+{
+    "feeds": [
+	    {
+            "url": "http://feeds.wnyc.org/radiolab",
+	        "prepend": "Radiolab: ",
+	        "item_max_age": 7
+	    },
+	    {
+            "url": "http://nerdist.libsyn.com/rss",
+	        "prepend": "Nerdist: "
+	    },
+	    {
+            "url": "http://www.npr.org/rss/podcast.php?id=344098539",
+            "prepend": "Wait Wait... ",
+            "item_limit": 5
+	    }
+    ],
+    "channel": {
+        "title": "Title of Your Custom Feed",
+        "link": "http://www.github.com/insanityfarm/podquilt",
+        "description": "My custom podcast feed from Podquilt"
+    }
+}
