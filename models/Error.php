@@ -2,7 +2,7 @@
 
 class Error {
 
-    public function show($exception)
+    static function show($exception)
     {
         echo $exception;
         die;
