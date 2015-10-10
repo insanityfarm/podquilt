@@ -130,8 +130,11 @@ class Feed {
         if(!filter_var($url, FILTER_VALIDATE_URL) === false)
         {
             // retrieve the remote XML
-            $contents = file_get_contents($url);
-            $document->loadXML($contents);
+            $contents = @file_get_contents($url);
+            if($contents)
+            {
+                $document->loadXML($contents);
+            }
         }
         return $document;
         
