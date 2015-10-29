@@ -11,16 +11,17 @@ class App {
 
     public function __construct()
     {
+        date_default_timezone_set('UTC');
         $this->config = new Config;
         return $this;
     }
-    
+
     public function hasConfig($key)
     {
         $keyExists  = array_key_exists($key, $this->config);
         return $keyExists;
     }
-    
+
     public function getConfig($key = null)
     {
         $config = null;

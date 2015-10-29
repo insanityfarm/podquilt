@@ -9,27 +9,33 @@ class Config {
     {
         // load the config data
         $config = $this->loadConfig();
-        
+
         // map that data to config object properties
         foreach($config as $key => $value)
         {
             $this->$key = $value;
         }
-        
+
         return $this;
     }
-    
+
     // load the config data from JSON file into an array
     private function loadConfig()
     {
         $config = array();
         try
         {
-            $config = json_decode(file_get_contents('config.json', FILE_USE_INCLUDE_PATH));
-            if(json_last_error() != JSON_ERROR_NONE)
+
+            if(!file_exists('config.json'))
             {
-                throw new Exception('Unable to read config.json. Please check that is is properly formatted and try again.');
+	            throw new Exception('Unable to find config.json. Please create a configuration file and try again.');
             }
+
+	        $config = json_decode(file_get_contents('config.json', FILE_USE_INCLUDE_PATH));
+	        if(json_last_error() != JSON_ERROR_NONE)
+	        {
+		        throw new Exception('Unable to read config.json. Please check that is is properly formatted and try again.');
+	        }
         }
         catch (Exception $e)
         {
