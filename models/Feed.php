@@ -94,14 +94,10 @@ class Feed {
                         break;
                     }
 
-                    // create an item object for each item node
-                    $item = new Item($itemNode);
+                    // TODO: Implement filtering of feed items matching criteria specified in config file
 
-                    // prepend to the item title if needed
-                    if(array_key_exists('prepend', $sourceFeed))
-                    {
-                        $item->prependTitle($sourceFeed->prepend);
-                    }
+                    // create an item object for each item node
+                    $item = new Item($itemNode, $sourceFeed);
 
                     // only proceed if the item is newer than the max age allowed
                     if($item->pubDate >= $maxAgeDate)
@@ -127,15 +123,31 @@ class Feed {
     {
 
         $document = new DOMDocument;
+
+        // set a few options to make XML parsing problems as silent as possible
+        // TODO: Debug the real reason warnings are sometimes being thrown here, instead of just suppressing them
+        libxml_use_internal_errors(true);
+        $document->recover = true;
+        $document->strictErrorChecking = false;
+
         if(!filter_var($url, FILTER_VALIDATE_URL) === false)
         {
             // retrieve the remote XML
             $contents = @file_get_contents($url);
             if($contents)
             {
+                // trim the contents for a document encapsulated in <xml></xml> nodes
                 $trimmedContents = substr($contents, 0, strpos($contents, "</xml>"));
+                if($trimmedContents === false)
+                {
+                    // if that didn't work, try the same thing for <rss></rss> nodes
+                    $trimmedContents = substr($contents, 0, strpos($contents, "</rss>"));
+                }
+                // figure out whether to use trimmed contents or the raw data
                 $contents = $trimmedContents ? $trimmedContents : $contents;
-                $document->loadXML($contents);
+                // load the XML with options for handling very large (>10MB) content and suppressing warnings
+                // TODO: See todo above, about replacing kludgy warning suppression with real error handling
+                $document->loadXML($contents, LIBXML_PARSEHUGE & LIBXML_NOWARNING & LIBXML_NOERROR);
             }
         }
         return $document;
