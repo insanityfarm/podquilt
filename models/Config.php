@@ -30,16 +30,16 @@ class Config {
 
             if(!file_exists('config.json'))
             {
-	            throw new Exception('Unable to find config.json. Please create a configuration file and try again.');
+	            throw new \Exception('Unable to find config.json. Please create a configuration file and try again.');
             }
 
 	        $config = json_decode(file_get_contents('config.json', FILE_USE_INCLUDE_PATH));
 	        if(json_last_error() != JSON_ERROR_NONE)
 	        {
-		        throw new Exception('Unable to read config.json. Please check that is is properly formatted and try again.');
+		        throw new \Exception('Unable to read config.json. Please check that is is properly formatted and try again.');
 	        }
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             Error::show($e);
         }
