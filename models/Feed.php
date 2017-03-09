@@ -60,12 +60,12 @@ class Feed {
     {
 
         // set the item limit and max age for this source feed
-        $limit = Config::DEFAULT_ITEM_LIMIT;
+        $limit = \Podquilt\Config::DEFAULT_ITEM_LIMIT;
         if(array_key_exists('item_limit', $sourceFeed))
         {
             $limit = (int) $sourceFeed->item_limit;
         }
-        $maxAge = Config::DEFAULT_ITEM_MAX_AGE;
+        $maxAge = \Podquilt\Config::DEFAULT_ITEM_MAX_AGE;
         if(array_key_exists('item_max_age', $sourceFeed))
         {
             $maxAge = (int) $sourceFeed->item_max_age;

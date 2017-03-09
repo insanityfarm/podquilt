@@ -13,7 +13,7 @@ class App {
     public function __construct()
     {
         date_default_timezone_set('UTC');
-        $this->config = new Config;
+        $this->config = new \Podquilt\Config;
         return $this;
     }
 
