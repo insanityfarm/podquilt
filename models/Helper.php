@@ -1,5 +1,7 @@
 <?php
 
+namespace Podquilt;
+
 // Helper class for utility functions that don't fit anywhere else
 
 class Helper {

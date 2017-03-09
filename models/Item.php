@@ -1,11 +1,13 @@
 <?php
 
+namespace Podquilt;
+
 class Item {
 
     // TODO: Add a config setting so this can be an overridable default instead of hard-coded rule
     const GUID_HASH_ALGORITHM = 'sha256';
 
-    public function __construct(DOMElement $itemNode, $sourceFeed)
+    public function __construct(\DOMElement $itemNode, $sourceFeed)
     {
 
         // attach the DOMElement object to the item object
@@ -96,7 +98,7 @@ class Item {
         if(array_key_exists('pubDate', $this))
         {
             $pubDateString = $this->pubDate;
-            $pubDate = DateTime::createFromFormat(DateTime::RSS, $pubDateString);
+            $pubDate = \DateTime::createFromFormat(\DateTime::RSS, $pubDateString);
             $this->pubDate = $pubDate;
         }
 

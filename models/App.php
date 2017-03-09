@@ -1,6 +1,7 @@
 <?php
 
 // Base app class, provides general functionality and loads other classes
+namespace Podquilt;
 
 require_once('models/Error.php');
 require_once('models/Config.php');

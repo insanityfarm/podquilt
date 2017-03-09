@@ -1,5 +1,7 @@
 <?php
 
+namespace Podquilt;
+
 class Config {
 
     const DEFAULT_ITEM_LIMIT    = 10;   // don't include more than this many items per feed

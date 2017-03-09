@@ -1,5 +1,7 @@
 <?php
 
+namespace Podquilt;
+
 class Feed {
 
     public function __construct($sourceFeed = null)
@@ -26,7 +28,7 @@ class Feed {
         $items = $this->items;
 
         // perform the sort
-        usort($items, array("Feed", "comparePubDates"));
+        usort($items, array("\\Podquilt\\Feed", "comparePubDates"));
 
         // sorted items are in descending order by default, reverse array for ascending order
         if($dir !== 'desc')
@@ -70,7 +72,7 @@ class Feed {
         }
 
         // get a DateTime object for the max age relative to the current time
-        $maxAgeDate = new DateTime($maxAge . ' days ago', new DateTimeZone('UTC'));
+        $maxAgeDate = new \DateTime($maxAge . ' days ago', new \DateTimeZone('UTC'));
 
         // only proceed if the the limit is a positive number
         if($limit > 0)
@@ -97,7 +99,7 @@ class Feed {
                     // TODO: Implement filtering of feed items matching criteria specified in config file
 
                     // create an item object for each item node
-                    $item = new Item($itemNode, $sourceFeed);
+                    $item = new \Podquilt\Item($itemNode, $sourceFeed);
 
                     // only proceed if the item is newer than the max age allowed
                     if($item->pubDate >= $maxAgeDate)
@@ -122,7 +124,7 @@ class Feed {
     private function getDocumentFromUrl($url)
     {
 
-        $document = new DOMDocument;
+        $document = new \DOMDocument;
 
         // set a few options to make XML parsing problems as silent as possible
         // TODO: Debug the real reason warnings are sometimes being thrown here, instead of just suppressing them

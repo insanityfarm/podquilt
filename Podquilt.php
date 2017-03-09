@@ -4,7 +4,7 @@
 
 require_once('models/App.php');
 
-class Podquilt extends App {
+class Podquilt extends \Podquilt\App {
 
     public function __construct()
     {
@@ -17,7 +17,7 @@ class Podquilt extends App {
     public function aggregateFeedItems()
     {
         // create output feed
-        $this->output = new Feed;
+        $this->output = new \Podquilt\Feed;
         
         // loop through all feeds, adding all items to the output feed
         foreach($this->feeds as $feed)
@@ -85,7 +85,7 @@ class Podquilt extends App {
         
         foreach($sourceFeeds as $sourceFeed)
         {
-            $feed = new Feed($sourceFeed);
+            $feed = new \Podquilt\Feed($sourceFeed);
             $feeds[] = $feed;
         }
         return $feeds;
