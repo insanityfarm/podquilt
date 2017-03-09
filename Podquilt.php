@@ -1,5 +1,7 @@
 <?php
 
+namespace Podquilt;
+
 // Main Podquilt application class
 
 require_once('models/App.php');
@@ -44,7 +46,7 @@ class Podquilt extends \Podquilt\App {
     {
     
         // start building a new document
-        $document = new DOMDocument;
+        $document = new \DOMDocument;
         
         // create <rss><channel /></rss> nodes and append them to the document root
         $rss = $document->createElement('rss');
