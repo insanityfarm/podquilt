@@ -2,7 +2,8 @@
 
 namespace Podquilt;
 
-class Config {
+class Config
+{
 
     const DEFAULT_ITEM_LIMIT    = 10;   // don't include more than this many items per feed
     const DEFAULT_ITEM_MAX_AGE  = 14;    // max number of days to retain old items
@@ -22,7 +23,7 @@ class Config {
     }
 
     // load the config data from JSON file into an array
-    private function loadConfig()
+    protected function loadConfig()
     {
         $config = array();
         try

@@ -6,9 +6,11 @@ namespace Podquilt;
 require_once('models/Error.php');
 require_once('models/Config.php');
 require_once('models/Feed.php');
+require_once('models/FileFeed.php');
 require_once('models/Item.php');
 
-class App {
+class App
+{
 
     public function __construct()
     {

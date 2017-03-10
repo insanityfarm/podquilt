@@ -2,7 +2,8 @@
 
 namespace Podquilt;
 
-class Error {
+class Error
+{
 
     static function show($exception)
     {

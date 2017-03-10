@@ -2,7 +2,8 @@
 
 namespace Podquilt;
 
-class Item {
+class Item
+{
 
     // TODO: Add a config setting so this can be an overridable default instead of hard-coded rule
     const GUID_HASH_ALGORITHM = 'sha256';

@@ -2,7 +2,7 @@
 
 namespace Podquilt;
 
-class Feed
+class FileFeed extends \Podquilt\Feed
 {
 
     public function __construct($sourceFeed = null)

@@ -6,7 +6,8 @@ namespace Podquilt;
 
 require_once('models/App.php');
 
-class Podquilt extends \Podquilt\App {
+class Podquilt extends \Podquilt\App
+{
 
     public function __construct()
     {
@@ -80,21 +81,41 @@ class Podquilt extends \Podquilt\App {
         return $document->saveXml();
     }
     
-    private function getFeeds()
+    protected function getFeeds()
     {
+
         $feeds = array();
         $sourceFeeds = $this->getConfig('feeds');
+	    $sourceFiles = $this->getConfig('files');
         
         foreach($sourceFeeds as $sourceFeed)
         {
-        	if(property_exists($sourceFeed, 'disabled') && $sourceFeed->disabled === 'true')
+        	// skip feeds flagged as disabled
+	        if($this->isEnabled($sourceFeed))
 	        {
-		        continue;
+		        $feeds[] = new \Podquilt\Feed($sourceFeed);;
 	        }
-	        $feed = new \Podquilt\Feed($sourceFeed);
-	        $feeds[] = $feed;
         }
+
+//        if($sourceFiles)
+//        {
+//	        foreach($sourceFiles as $file)
+//	        {
+//	        	if($this->isEnabled($file))
+//		        {
+//			        $feeds[] = new \Podquilt\FileFeed($file);
+//		        }
+//	        }
+//        }
+
         return $feeds;
+
     }
+
+	protected function isEnabled($data)
+	{
+		// return true unless object contains a property "disabled" with a (string) value of "true"
+		return !(property_exists($data, 'disabled') && $data->disabled === 'true');
+	}
 
 }
