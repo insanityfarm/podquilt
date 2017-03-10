@@ -15,7 +15,7 @@ class Helper {
 		// good way to determine if this is the top-level invocation
 		if($simpleXml == null)
 		{
-			$simpleXml = new SimpleXMLElement($rootNodeString);
+			$simpleXml = new \SimpleXMLElement($rootNodeString);
 			$doReturn = true;
 		}
 

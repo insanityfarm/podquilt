@@ -87,8 +87,12 @@ class Podquilt extends \Podquilt\App {
         
         foreach($sourceFeeds as $sourceFeed)
         {
-            $feed = new \Podquilt\Feed($sourceFeed);
-            $feeds[] = $feed;
+        	if(property_exists($sourceFeed, 'disabled') && $sourceFeed->disabled === 'true')
+	        {
+		        continue;
+	        }
+	        $feed = new \Podquilt\Feed($sourceFeed);
+	        $feeds[] = $feed;
         }
         return $feeds;
     }

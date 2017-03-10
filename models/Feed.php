@@ -96,20 +96,22 @@ class Feed {
                         break;
                     }
 
+	                // increment the index
+	                $index++;
+
                     // TODO: Implement filtering of feed items matching criteria specified in config file
 
                     // create an item object for each item node
                     $item = new \Podquilt\Item($itemNode, $sourceFeed);
 
-                    // only proceed if the item is newer than the max age allowed
-                    if($item->pubDate >= $maxAgeDate)
+                    // skip item if it is older than the max age allowed
+                    if($item->pubDate < $maxAgeDate)
                     {
-                        // add the item to this feed
-                        $this->addItem($item);
+                        continue;
                     }
 
-                    // increment the index
-                    $index++;
+	                // add the item to this feed
+	                $this->addItem($item);
 
                 }
 

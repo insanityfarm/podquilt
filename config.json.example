@@ -7,7 +7,8 @@
 	    },
 	    {
             "url": "http://nerdist.libsyn.com/rss",
-	        "prepend": "Nerdist: "
+	        "prepend": "Nerdist: ",
+	        "disabled": "true"
 	    },
 	    {
             "url": "http://www.npr.org/rss/podcast.php?id=344098539",
