@@ -45,40 +45,12 @@ class Podquilt extends \Podquilt\App
     
     public function toXml()
     {
-    
-        // start building a new document
-        $document = new \DOMDocument;
-        
-        // create <rss><channel /></rss> nodes and append them to the document root
-        $rss = $document->createElement('rss');
-        $channel = $document->createElement('channel');
-        $rssVersionAttribute = $document->createAttribute('version');
-        $rssVersionAttribute->value = '2.0';
-        $document->appendChild($rss);
-        $rss->appendChild($rssVersionAttribute);
-        $rss->appendChild($channel);
-        
+
         // get channel data from config
         $channelConfig = get_object_vars($this->getConfig('channel'));
-        
-        // use channel data to generate channel contents
-        foreach($channelConfig as $key => $value)
-        {
-            $channelNode = $document->createElement($key, $value);
-            $channel->appendChild($channelNode);
-        }
-        
-        // get nodes from all items in the output feed
-        $itemNodes = $this->output->getItemNodes();
-        
-        // import the item nodes to the document and append it to the channel node
-        foreach($itemNodes as $itemNode)
-        {
-            $importedNode = $document->importNode($itemNode, true);
-            $channel->appendChild($importedNode);
-        }
-        
-        return $document->saveXml();
+
+        return $this->output->toXml($channelConfig);
+
     }
     
     protected function getFeeds()
@@ -97,16 +69,16 @@ class Podquilt extends \Podquilt\App
 	        }
         }
 
-//        if($sourceFiles)
-//        {
-//	        foreach($sourceFiles as $file)
-//	        {
-//	        	if($this->isEnabled($file))
-//		        {
-//			        $feeds[] = new \Podquilt\FileFeed($file);
-//		        }
-//	        }
-//        }
+        if($sourceFiles)
+        {
+	        foreach($sourceFiles as $file)
+	        {
+	        	if($this->isEnabled($file))
+		        {
+			        $feeds[] = new \Podquilt\FileFeed($file);
+		        }
+	        }
+        }
 
         return $feeds;
 

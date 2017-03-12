@@ -57,6 +57,44 @@ class Feed
         return $itemNodes;
     }
 
+	public function toXml($channelConfig = array())
+	{
+
+		// start building a new document
+		$document = new \DOMDocument;
+
+		// create <rss><channel /></rss> nodes and append them to the document root
+		$rss = $document->createElement('rss');
+		$channel = $document->createElement('channel');
+		$rssVersionAttribute = $document->createAttribute('version');
+		$rssVersionAttribute->value = '2.0';
+		$document->appendChild($rss);
+		$rss->appendChild($rssVersionAttribute);
+		$rss->appendChild($channel);
+
+		// use channel data to generate channel contents
+		if(is_array($channelConfig))
+		{
+			foreach ($channelConfig as $key => $value)
+			{
+				$channelNode = $document->createElement($key, $value);
+				$channel->appendChild($channelNode);
+			}
+		}
+
+		// get nodes from all items in the output feed
+		$itemNodes = $this->getItemNodes();
+
+		// import the item nodes to the document and append it to the channel node
+		foreach($itemNodes as $itemNode)
+		{
+			$importedNode = $document->importNode($itemNode, true);
+			$channel->appendChild($importedNode);
+		}
+
+		return $document->saveXml();
+	}
+
     protected function initItems($sourceFeed)
     {
 
@@ -158,11 +196,6 @@ class Feed
         return $document;
 
     }
-
-//    public function isDisabled()
-//    {
-//    	if(property_exists($this, 'disabled') && $this->disabled === 'true')
-//    }
 
     static function comparePubDates($a, $b)
     {

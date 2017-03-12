@@ -19,8 +19,9 @@
     "files": [
         {
             "url": "http://somedomain.com/path/to/audio.mp3",
-            "name": "Title to Display in Podcatcher",
-            "date": "Tue, 07 Mar 2017 22:30:00 -0800"
+            "title": "Title to Display in Podcatcher",
+            "pubDate": "Tue, 1 Mar 2017 22:30:00 -0800",
+            "description": "Lorem ipsum dolor sit amet"
         }
     ],
     "channel": {
