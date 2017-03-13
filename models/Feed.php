@@ -135,8 +135,8 @@ class Feed
                     // create an item object for each item node
                     $item = new \Podquilt\Item($itemNode, $this->source);
 
-                    // skip item if it is older than the max age allowed
-                    if($item->pubDate < $this->_getItemMaxAgeDate())
+                    // skip item if it is older than the max age allowed or scheduled for future publication
+                    if($item->pubDate < $this->_getItemMaxAgeDate() || $item->pubDate > new \DateTime)
                     {
                         continue;
                     }
