@@ -12,7 +12,7 @@ class Podquilt extends \Podquilt\App
     public function __construct()
     {
         parent::__construct();
-        $this->feeds = $this->getFeeds();
+        $this->feeds = $this->_getFeeds();
         $this->aggregateFeedItems();
         return $this;
     }
@@ -53,7 +53,7 @@ class Podquilt extends \Podquilt\App
 
     }
     
-    protected function getFeeds()
+    protected function _getFeeds()
     {
 
         $feeds = array();
@@ -63,9 +63,9 @@ class Podquilt extends \Podquilt\App
         foreach($sourceFeeds as $sourceFeed)
         {
         	// skip feeds flagged as disabled
-	        if($this->isEnabled($sourceFeed))
+	        if($this->_isEnabled($sourceFeed))
 	        {
-		        $feeds[] = new \Podquilt\Feed($sourceFeed);;
+		        $feeds[] = new \Podquilt\Feed($sourceFeed);
 	        }
         }
 
@@ -73,7 +73,7 @@ class Podquilt extends \Podquilt\App
         {
 	        foreach($sourceFiles as $file)
 	        {
-	        	if($this->isEnabled($file))
+	        	if($this->_isEnabled($file))
 		        {
 			        $feeds[] = new \Podquilt\FileFeed($file);
 		        }
@@ -84,7 +84,7 @@ class Podquilt extends \Podquilt\App
 
     }
 
-	protected function isEnabled($data)
+	protected function _isEnabled($data)
 	{
 		// return true unless object contains a property "disabled" with a (string) value of "true"
 		return !(property_exists($data, 'disabled') && $data->disabled === 'true');

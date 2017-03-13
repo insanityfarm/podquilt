@@ -11,7 +11,7 @@ class Config
     public function __construct()
     {
         // load the config data
-        $config = $this->loadConfig();
+        $config = $this->_loadConfig();
 
         // map that data to config object properties
         foreach($config as $key => $value)
@@ -23,7 +23,7 @@ class Config
     }
 
     // load the config data from JSON file into an array
-    protected function loadConfig()
+    protected function _loadConfig()
     {
         $config = array();
         try

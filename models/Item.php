@@ -8,14 +8,14 @@ class Item
     // TODO: Add a config setting so this can be an overridable default instead of hard-coded rule
     const GUID_HASH_ALGORITHM = 'sha256';
 
-    public function __construct(\DOMElement $itemNode, $sourceFeed)
+    public function __construct(\DOMElement $itemNode, $source)
     {
 
         // attach the DOMElement object to the item object
         $this->node = $itemNode;
 
         // set the source feed for easy retrieval later
-        $this->sourceFeed = $sourceFeed;
+        $this->source = $source;
 
         // convert the XML <item /> node's children into properties of this object
         foreach($itemNode->childNodes as $node)
@@ -87,9 +87,9 @@ class Item
     {
 
         // prepend to the item title if needed
-        if(array_key_exists('prepend', $this->sourceFeed))
+        if(array_key_exists('prepend', $this->source))
         {
-            $this->prependTitle($this->sourceFeed->prepend);
+            $this->prependTitle($this->source->prepend);
         }
 
         // set GUID for the item

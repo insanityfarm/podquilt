@@ -5,51 +5,45 @@ namespace Podquilt;
 class FileFeed extends \Podquilt\Feed
 {
 
-    public function __construct($sourceFile = null)
+    protected function _initItems()
     {
 
-        if($sourceFile !== null)
-        {
-            // convert file to an item node and add it to this feed object
-	        $item = $this->initItem($sourceFile);
-        }
+	    // TODO: Add validation that these source file keys exist; title and description should be optional
 
-        return $this;
+    	// parse the source file's pubDate first to validate if it should be included
+	    $pubDateTime = new \DateTime($this->source->pubDate, new \DateTimeZone('UTC'));
+	    if($pubDateTime > $this->_getItemMaxAgeDate())
+	    {
 
-    }
+		    // create the item node (document is just for generating it but will not be returned)
+		    $document = new \DOMDocument;
+		    $itemNode = $document->createElement('item');
 
-    protected function initItem($sourceFile)
-    {
+		    // add a title node with the value from config
+		    $title = $document->createElement('title', $this->source->title);
+		    $itemNode->appendChild($title);
 
-    	// create the item node (document is just for generating it but will not be returned)
-	    $document = new \DOMDocument;
-	    $itemNode = $document->createElement('item');
+		    // add a description node with the value from config
+		    $description = $document->createElement('description', $this->source->title);
+		    $itemNode->appendChild($description);
 
-	    // TODO: Add validation that these config keys exist; title and description should be optional
+		    // read the pubDate from config, convert to UTC and add to node in standardized format
+		    $pubdateValue = $pubDateTime->format('r');
+		    $pubDate = $document->createElement('pubDate', $pubdateValue);
+		    $itemNode->appendChild($pubDate);
 
-	    // add a title node with the value from config
-	    $title = $document->createElement('title', $sourceFile->title);
-	    $itemNode->appendChild($title);
+		    // render the URL in an enclosure node
+		    $enclosure = $document->createElement('enclosure');
+		    $enclosureUrlAttribute = $document->createAttribute('url');
+		    $enclosureUrlAttribute->value = $this->source->url;
+		    $enclosure->appendChild($enclosureUrlAttribute);
+		    $itemNode->appendChild($enclosure);
 
-	    // add a description node with the value from config
-	    $description = $document->createElement('description', $sourceFile->title);
-	    $itemNode->appendChild($description);
+		    $item = new \Podquilt\Item($itemNode, array());
+		    $this->addItem($item);
 
-	    // read the pubDate from config, convert to UTC and add to node in standardized format
-	    $pubDateTime = new \DateTime($sourceFile->pubDate, new \DateTimeZone('UTC'));
-	    $pubdateValue = $pubDateTime->format('r');
-	    $pubDate = $document->createElement('pubDate', $pubdateValue);
-	    $itemNode->appendChild($pubDate);
+	    }
 
-	    // render the URL in an enclosure node
-	    $enclosure = $document->createElement('enclosure');
-	    $enclosureUrlAttribute = $document->createAttribute('url');
-	    $enclosureUrlAttribute->value = $sourceFile->url;
-	    $enclosure->appendChild($enclosureUrlAttribute);
-	    $itemNode->appendChild($enclosure);
-
-	    $item = new \Podquilt\Item($itemNode, array());
-	    $this->addItem($item);
 		return $this;
 
     }

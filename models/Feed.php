@@ -5,17 +5,24 @@ namespace Podquilt;
 class Feed
 {
 
-    public function __construct($sourceFeed = null)
+	public $items = array();
+	public $source = null;
+
+	protected $_itemLimit;
+	protected $_itemMaxAge;
+	protected $_itemMaxAgeDate;
+
+    public function __construct($source = null)
     {
+	    if($source)
+	    {
+		    // make the source feed or file available for this instance
+		    $this->source = $source;
 
-        if($sourceFeed !== null)
-        {
-            // retrieve all items from a source feed and add them to this feed object
-            $this->initItems($sourceFeed);
-        }
-
+		    // retrieve all items from the source feed or file and add them to this feed object
+		    $this->_initItems();
+	    }
         return $this;
-
     }
 
     public function addItem(Item $item)
@@ -95,33 +102,18 @@ class Feed
 		return $document->saveXml();
 	}
 
-    protected function initItems($sourceFeed)
+    protected function _initItems()
     {
 
-        // set the item limit and max age for this source feed
-        $limit = \Podquilt\Config::DEFAULT_ITEM_LIMIT;
-        if(array_key_exists('item_limit', $sourceFeed))
-        {
-            $limit = (int) $sourceFeed->item_limit;
-        }
-        $maxAge = \Podquilt\Config::DEFAULT_ITEM_MAX_AGE;
-        if(array_key_exists('item_max_age', $sourceFeed))
-        {
-            $maxAge = (int) $sourceFeed->item_max_age;
-        }
-
-        // get a DateTime object for the max age relative to the current time
-        $maxAgeDate = new \DateTime($maxAge . ' days ago', new \DateTimeZone('UTC'));
-
         // only proceed if the the limit is a positive number
-        if($limit > 0)
+        if($this->_getItemLimit() > 0)
         {
             // if there's a URL for the source feed, attempt to fetch its items
-            if(array_key_exists('url', $sourceFeed))
+            if(array_key_exists('url', $this->source))
             {
 
                 // get a DOMDocument object to retrieve item nodes from
-                $document = $this->getDocumentFromUrl($sourceFeed->url);
+                $document = $this->_getDocumentFromUrl($this->source->url);
 
                 // find all item nodes in the document
                 $itemNodes = $document->getElementsByTagName('item');
@@ -130,7 +122,7 @@ class Feed
                 $index = 1; // set an incrementing loop index to limit the number of items
                 foreach($itemNodes as $itemNode){
 
-                    if($index > $limit)
+                    if($index > $this->_getItemLimit())
                     {
                         break;
                     }
@@ -141,10 +133,10 @@ class Feed
                     // TODO: Implement filtering of feed items matching criteria specified in config file
 
                     // create an item object for each item node
-                    $item = new \Podquilt\Item($itemNode, $sourceFeed);
+                    $item = new \Podquilt\Item($itemNode, $this->source);
 
                     // skip item if it is older than the max age allowed
-                    if($item->pubDate < $maxAgeDate)
+                    if($item->pubDate < $this->_getItemMaxAgeDate())
                     {
                         continue;
                     }
@@ -162,7 +154,7 @@ class Feed
     }
 
     // fetch an XML file by URL and parse it into a DOMDocument object
-    protected function getDocumentFromUrl($url)
+    protected function _getDocumentFromUrl($url)
     {
 
         $document = new \DOMDocument;
@@ -196,6 +188,52 @@ class Feed
         return $document;
 
     }
+
+    // TODO: Any way to make _getItemLimit() and _getItemMaxAge() more DRY? They're basically the same
+
+    protected function _getItemLimit()
+    {
+    	if(!$this->_itemLimit)
+    	{
+		    // fetch the default item limit from config and put it in an array by itself
+		    $itemLimits = array(\Podquilt\Config::DEFAULT_ITEM_LIMIT);
+		    if(array_key_exists('item_limit', $this->source))
+		    {
+		    	// if this feed has its own item limit, add that to the array as well
+			    $itemLimits[] = (int) $this->source->item_limit;
+		    }
+		    // whichever number is smaller takes precedence
+		    $this->_itemLimit = min($itemLimits);
+	    }
+	    return $this->_itemLimit;
+    }
+
+	protected function _getItemMaxAge()
+	{
+		if(!$this->_itemMaxAge)
+		{
+			// fetch the default item max age from config and put it in an array by itself
+			$itemMaxAges = array(\Podquilt\Config::DEFAULT_ITEM_MAX_AGE);
+			if(array_key_exists('item_max_age', $this->source))
+			{
+				// if this feed has its own item max age, add that to the array as well
+				$itemMaxAges[] = (int) $this->source->item_max_age;
+			}
+			// whichever number is smaller takes precedence
+			$this->_itemMaxAge = min($itemMaxAges);
+		}
+		return $this->_itemMaxAge;
+	}
+
+	protected function _getItemMaxAgeDate()
+	{
+		if(!$this->_itemMaxAgeDate)
+		{
+			// get a DateTime object for the max age relative to the current time
+			$this->_itemMaxAgeDate = new \DateTime($this->_getItemMaxAge() . ' days ago', new \DateTimeZone('UTC'));
+		}
+		return $this->_itemMaxAgeDate;
+	}
 
     static function comparePubDates($a, $b)
     {
