@@ -56,7 +56,7 @@ class Podquilt extends \Podquilt\App
     public function logExecutionTime()
     {
     	$executionTime = round((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000);
-    	$logMessage = 'Process complete. Total execution time: ' . $executionTime . 'ms';
+    	$logMessage = "Process complete. Total execution time: " . $executionTime . "ms\n";
     	$this->log->write($logMessage, Log::LOG_LEVEL_INFO);
     }
     

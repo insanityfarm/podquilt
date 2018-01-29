@@ -16,10 +16,10 @@ class App
     public function __construct()
     {
         date_default_timezone_set('UTC');
-	    new \Podquilt\Error($this);
+        new \Podquilt\Error($this);
         new \Podquilt\Config($this);
         new \Podquilt\Log($this);
-	    $this->log->write('Processing new request from ' . $_SERVER['REMOTE_ADDR'] . '...', Log::LOG_LEVEL_INFO);
+        $this->log->write('Processing new request from `' . $_SERVER['HTTP_USER_AGENT'] . '` at ' . $_SERVER['REMOTE_ADDR'] . '…', Log::LOG_LEVEL_INFO);
         return $this;
     }
 
