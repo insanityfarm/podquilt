@@ -47,18 +47,25 @@ class Podquilt extends \Podquilt\App
     {
 
         // get channel data from config
-        $channelConfig = get_object_vars($this->getConfig('channel'));
+        $channelConfig = get_object_vars($this->config->channel);
 
         return $this->output->toXml($channelConfig);
 
+    }
+
+    public function logExecutionTime()
+    {
+    	$executionTime = round((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000);
+    	$logMessage = 'Process complete. Total execution time: ' . $executionTime . 'ms';
+    	$this->log->write($logMessage, Log::LOG_LEVEL_INFO);
     }
     
     protected function _getFeeds()
     {
 
         $feeds = array();
-        $sourceFeeds = $this->getConfig('feeds');
-	    $sourceFiles = $this->getConfig('files');
+        $sourceFeeds = $this->config->feeds;
+	    $sourceFiles = $this->config->files;
         
         foreach($sourceFeeds as $sourceFeed)
         {

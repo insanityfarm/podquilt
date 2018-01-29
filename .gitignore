@@ -6,3 +6,9 @@
 
 # This is a personal config file which will differ from user to user
 config.json
+
+# Don't commit log files or media
+/logs/*
+!/logs/.htaccess
+/media/*
+!/media/.htaccess

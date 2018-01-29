@@ -9,3 +9,5 @@ header("Content-Disposition: inline");
 header("Cache-control: no-cache");
 
 echo $podquilt->sortItemsByPubDate()->toXml();
+
+$podquilt->logExecutionTime();
