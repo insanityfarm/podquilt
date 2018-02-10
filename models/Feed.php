@@ -212,7 +212,7 @@ class Feed
 	    if(($responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE)) !== 200)
 	    {
 	    	$logLevel = $responseCode < 400 ? Log::LOG_LEVEL_INFO : Log::LOG_LEVEL_WARN;
-		    $this->app->log->write('Server returned code ' . $responseCode, $logLevel);
+		    $this->app->log->write('Request for ' . $url . ' returned code ' . $responseCode . '.', $logLevel);
 	    }
 	    curl_close($ch);
 	    return $response;
