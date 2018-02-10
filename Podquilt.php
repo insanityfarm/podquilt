@@ -20,7 +20,7 @@ class Podquilt extends \Podquilt\App
     public function aggregateFeedItems()
     {
         // create output feed
-        $this->output = new \Podquilt\Feed;
+        $this->output = new \Podquilt\Feed($this);
         
         // loop through all feeds, adding all items to the output feed
         foreach($this->feeds as $feed)
@@ -72,7 +72,7 @@ class Podquilt extends \Podquilt\App
         	// skip feeds flagged as disabled
 	        if($this->_isEnabled($sourceFeed))
 	        {
-		        $feeds[] = new \Podquilt\Feed($sourceFeed);
+		        $feeds[] = new \Podquilt\Feed($this, $sourceFeed);
 	        }
         }
 
@@ -82,7 +82,7 @@ class Podquilt extends \Podquilt\App
 	        {
 	        	if($this->_isEnabled($file))
 		        {
-			        $feeds[] = new \Podquilt\FileFeed($file);
+			        $feeds[] = new \Podquilt\FileFeed($this, $file);
 		        }
 	        }
         }

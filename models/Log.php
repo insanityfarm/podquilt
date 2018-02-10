@@ -19,9 +19,10 @@ class Log
 
     public function write($message, $logLevel = self::LOG_LEVEL_INFO)
     {
+    	$success = false;
 	    if($this->app->config->logs->enabled === true)
 	    {
-	    	if($this->app->config->logs->level <= $logLevel)
+	    	if($this->app->config->logs->level >= $logLevel)
 		    {
 
 		    	// TODO: Add some cleanup for old logs
