@@ -118,11 +118,12 @@ class Feed
 
                 // find all item nodes in the document
                 $itemNodes = $document->getElementsByTagName('item');
+	            $this->app->log->write('Beginning to parse feed: ' . $this->source->url, Log::LOG_LEVEL_INFO);
 
                 // loop through the item nodes, adding them to this feed
                 $index = 1; // set an incrementing loop index to limit the number of items
-                foreach($itemNodes as $itemNode){
-
+                foreach($itemNodes as $itemNode)
+                {
                     if($index > $this->_getItemLimit())
                     {
                         break;
@@ -147,6 +148,8 @@ class Feed
 
                 }
 
+	            $this->app->log->write('Parsing complete. ' . ($index - 1) . ' items were retrieved from feed.', Log::LOG_LEVEL_INFO);
+
             }
         }
 
@@ -168,7 +171,7 @@ class Feed
         if(!filter_var($url, FILTER_VALIDATE_URL) === false)
         {
             // retrieve the remote XML
-            $contents = @file_get_contents($url);
+            $contents = $this->_requestUrl($url);
             if($contents)
             {
                 // trim the contents for a document encapsulated in <xml></xml> nodes
@@ -190,7 +193,29 @@ class Feed
 			$this->app->log->write('Invalid URL for feed: ' . $url, Log::LOG_LEVEL_WARN);
         }
         return $document;
+    }
 
+    protected function _requestUrl($url)
+    {
+    	// build a complete HTTP request for curl (some servers don't play nicely without certain headers)
+	    $headers = [
+		    'User-Agent: ' . (array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : 'Podquilt ' . Podquilt::VERSION),
+		    'Accept: */*'
+	    ];
+	    $ch = curl_init();
+	    curl_setopt($ch, CURLOPT_URL, $url);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+	    $response = curl_exec($ch);
+	    // log non-success responses as info or warning, depending on whether code was an error (e.g., 400 or higher)
+	    if(($responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE)) !== 200)
+	    {
+	    	$logLevel = $responseCode < 400 ? Log::LOG_LEVEL_INFO : Log::LOG_LEVEL_WARN;
+		    $this->app->log->write('Server returned code ' . $responseCode, $logLevel);
+	    }
+	    curl_close($ch);
+	    return $response;
     }
 
     // TODO: Any way to make _getItemLimit() and _getItemMaxAge() more DRY? They're basically the same
