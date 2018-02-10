@@ -28,5 +28,10 @@
         "title": "Title of Your Custom Feed",
         "link": "http://www.github.com/insanityfarm/podquilt",
         "description": "My custom podcast feed from Podquilt"
+    },
+    "logs": {
+        "enabled": true,
+        "level": 4,
+        "path": "logs/podquilt.log"
     }
 }

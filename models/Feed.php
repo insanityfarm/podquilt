@@ -12,8 +12,9 @@ class Feed
 	protected $_itemMaxAge;
 	protected $_itemMaxAgeDate;
 
-    public function __construct($source = null)
+    public function __construct(\Podquilt\App $app, $source = null)
     {
+    	$this->app = $app;
 	    if($source)
 	    {
 		    // make the source feed or file available for this instance
@@ -156,7 +157,6 @@ class Feed
     // fetch an XML file by URL and parse it into a DOMDocument object
     protected function _getDocumentFromUrl($url)
     {
-
         $document = new \DOMDocument;
 
         // set a few options to make XML parsing problems as silent as possible
@@ -184,6 +184,10 @@ class Feed
                 // TODO: See todo above, about replacing kludgy warning suppression with real error handling
                 $document->loadXML($contents, LIBXML_PARSEHUGE & LIBXML_NOWARNING & LIBXML_NOERROR);
             }
+        }
+        else
+        {
+			$this->app->log->write('Invalid URL for feed: ' . $url, Log::LOG_LEVEL_WARN);
         }
         return $document;
 

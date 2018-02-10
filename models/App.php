@@ -3,8 +3,9 @@
 // Base app class, provides general functionality and loads other classes
 namespace Podquilt;
 
-require_once('models/Error.php');
 require_once('models/Config.php');
+require_once('models/Log.php');
+require_once('models/Error.php');
 require_once('models/Feed.php');
 require_once('models/FileFeed.php');
 require_once('models/Item.php');
@@ -15,31 +16,11 @@ class App
     public function __construct()
     {
         date_default_timezone_set('UTC');
-        $this->config = new \Podquilt\Config;
+        new \Podquilt\Error($this);
+        new \Podquilt\Config($this);
+        new \Podquilt\Log($this);
+        $this->log->write('Processing new request from `' . $_SERVER['HTTP_USER_AGENT'] . '` at ' . $_SERVER['REMOTE_ADDR'] . '…', Log::LOG_LEVEL_INFO);
         return $this;
-    }
-
-    public function hasConfig($key)
-    {
-        $keyExists  = array_key_exists($key, $this->config);
-        return $keyExists;
-    }
-
-    public function getConfig($key = null)
-    {
-        $config = null;
-        if(empty($key))
-        {
-            $config = $this->config;
-        }
-        else
-        {
-            if($this->hasConfig($key))
-            {
-                $config = $this->config->$key;
-            }
-        }
-        return $config;
     }
 
 }
