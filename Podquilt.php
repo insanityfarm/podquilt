@@ -9,6 +9,8 @@ require_once('models/App.php');
 class Podquilt extends \Podquilt\App
 {
 
+	const VERSION = '1.0.0';
+
     public function __construct()
     {
         parent::__construct();
