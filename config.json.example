@@ -6,14 +6,17 @@
 	        "item_max_age": 7
 	    },
 	    {
-            "url": "http://nerdist.libsyn.com/rss",
-	        "prepend": "Nerdist: ",
-	        "disabled": "true"
-	    },
-	    {
             "url": "http://www.npr.org/rss/podcast.php?id=344098539",
             "prepend": "Wait Wait... ",
-            "item_limit": 5
+            "item_limit": 5,
+            "disabled": "true"
+	    },
+	    {
+            "url": "https://feeds.99percentinvisible.org/99percentinvisible",
+            "item_limit": 5,
+            "filter": {
+                "itunes:episodeType": "^((?!trailer).)*$"
+            }
 	    }
     ],
     "files": [

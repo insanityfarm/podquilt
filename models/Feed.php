@@ -137,14 +137,31 @@ class Feed
                     // create an item object for each item node
                     $item = new \Podquilt\Item($itemNode, $this->source);
 
+                    $isItemWanted = true;
+                    if(array_key_exists('filter', $this->source) && is_object($this->source->filter))
+                    {
+                        // loop through all of the filters for this feed, only proceeding if this item matches all
+                        foreach($this->source->filter as $node => $pattern)
+                        {
+                            if(preg_match('/'.$pattern.'/i', $item->$node) === 0)
+                            {
+                                $isItemWanted = false;
+                                break;
+                            }
+                        }
+                    }
+
                     // skip item if it is older than the max age allowed or scheduled for future publication
                     if($item->pubDate < $this->_getItemMaxAgeDate() || $item->pubDate > new \DateTime)
                     {
-                        continue;
+                        $isItemWanted = false;
                     }
 
-	                // add the item to this feed
-	                $this->addItem($item);
+                    if($isItemWanted)
+                    {
+                        // add the item to this feed
+	                    $this->addItem($item);
+                    }
 
                 }
 

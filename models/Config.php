@@ -15,6 +15,7 @@ class Config
 
 	const CONFIG_KEY_FEEDS                  = 'feeds';
 	const CONFIG_KEY_FEEDS_DISABLED         = 'disabled';
+	const CONFIG_KEY_FEEDS_FILTER           = 'filter';
 	const CONFIG_KEY_FEEDS_PREPEND          = 'prepend';
 	const CONFIG_KEY_FEEDS_URL              = 'url';
 
