@@ -129,38 +129,16 @@ class Feed
                         break;
                     }
 
-	                // increment the index
-	                $index++;
-
-                    // TODO: Implement filtering of feed items matching criteria specified in config file
-
-                    // create an item object for each item node
+                    // create an item object for this item node
                     $item = new \Podquilt\Item($itemNode, $this->source);
 
-                    $isItemWanted = true;
-                    if(array_key_exists('filter', $this->source) && is_object($this->source->filter))
-                    {
-                        // loop through all of the filters for this feed, only proceeding if this item matches all
-                        foreach($this->source->filter as $node => $pattern)
-                        {
-                            if(preg_match('/'.$pattern.'/i', $item->$node) === 0)
-                            {
-                                $isItemWanted = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    // skip item if it is older than the max age allowed or scheduled for future publication
-                    if($item->pubDate < $this->_getItemMaxAgeDate() || $item->pubDate > new \DateTime)
-                    {
-                        $isItemWanted = false;
-                    }
-
-                    if($isItemWanted)
+                    // determine if item should be included in generated feed
+                    if($this->_checkIfItemIsWanted($item))
                     {
                         // add the item to this feed
 	                    $this->addItem($item);
+                        // increment the index
+                        $index++;
                     }
 
                 }
@@ -280,6 +258,28 @@ class Feed
 		}
 		return $this->_itemMaxAgeDate;
 	}
+
+    protected function _checkIfItemIsWanted($item)
+    {
+        // apply filter(s) if any are defined for this feed
+        if(array_key_exists('filter', $this->source) && is_object($this->source->filter))
+        {
+            // loop through all of the filters for this feed, only proceeding if this item matches all
+            foreach($this->source->filter as $node => $pattern)
+            {
+                if(preg_match('/'.$pattern.'/i', $item->$node) === 0)
+                {
+                    return false;
+                }
+            }
+        }
+        // skip item if it is older than the max age allowed or scheduled for future publication
+        if($item->pubDate < $this->_getItemMaxAgeDate() || $item->pubDate > new \DateTime)
+        {
+            return false;
+        }
+        return true;
+    }
 
     static function comparePubDates($a, $b)
     {
