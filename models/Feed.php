@@ -261,13 +261,15 @@ class Feed
 
     protected function _checkIfItemIsWanted($item)
     {
+        // TODO: Allow global filters to be applied to all feeds alongside individual feed filters
         // apply filter(s) if any are defined for this feed
         if(array_key_exists('filter', $this->source) && is_object($this->source->filter))
         {
             // loop through all of the filters for this feed, only proceeding if this item matches all
             foreach($this->source->filter as $node => $pattern)
             {
-                if(preg_match('/'.$pattern.'/i', $item->$node) === 0)
+                // only evaluate regex against nodes that actually exist on the item
+                if(array_key_exists($node, $item) && preg_match('/'.$pattern.'/i', $item->$node) === 0)
                 {
                     return false;
                 }
