@@ -16,6 +16,7 @@ class App
     public function __construct()
     {
         date_default_timezone_set('UTC');
+        $this->now = new \DateTime;
         new \Podquilt\Error($this);
         new \Podquilt\Config($this);
         new \Podquilt\Log($this);

@@ -12,3 +12,6 @@ config.json
 !/logs/.htaccess
 /media/*
 !/media/.htaccess
+
+# Don't commit composer dependencies
+/vendor

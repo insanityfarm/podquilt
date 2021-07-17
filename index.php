@@ -1,6 +1,7 @@
 <?php
 
 require_once('Podquilt.php');
+require __DIR__ . '/vendor/autoload.php';
 
 $podquilt = new \Podquilt\Podquilt;
 

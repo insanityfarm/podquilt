@@ -12,7 +12,7 @@ class FileFeed extends \Podquilt\Feed
 
     	// parse the source file's pubDate first to validate if it should be included
 	    $pubDateTime = new \DateTime($this->source->pubDate, new \DateTimeZone('UTC'));
-	    if($pubDateTime > $this->_getItemMaxAgeDate() && $pubDateTime < new \DateTime)
+	    if($pubDateTime > $this->_getItemMaxAgeDate() && $pubDateTime < $this->app->now)
 	    {
 
 		    // create the item node (document is just for generating it but will not be returned)

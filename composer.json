@@ -1,0 +1,8 @@
+{
+	"config": {
+		"optimize-autoloader": true
+	},
+    "require": {
+        "dragonmantank/cron-expression": "3.1.*"
+    }
+}

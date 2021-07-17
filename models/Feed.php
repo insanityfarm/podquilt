@@ -11,6 +11,11 @@ class Feed
 	protected $_itemLimit;
 	protected $_itemMaxAge;
 	protected $_itemMaxAgeDate;
+	protected $_isReplayEnabled;
+	protected $_replayQueue;
+	protected $_replaySchedule;
+	protected $_replayStartDate;
+	protected $_replayOriginalStartDate;
 
     public function __construct(\Podquilt\App $app, $source = null)
     {
@@ -259,6 +264,94 @@ class Feed
 		return $this->_itemMaxAgeDate;
 	}
 
+    protected function _getIsReplayEnabled()
+    {
+        if(!isset($this->_isReplayEnabled))
+        {
+            $this->_isReplayEnabled = false;
+            if(!array_key_exists('replay', $this->source) || !is_object($this->source->replay))
+            {
+                return $this->_isReplayEnabled;
+            }
+            if($this->_getReplaySchedule() === false)
+            {
+                $this->app->log->write('The feed\'s replay schedule is an improperly formatted cron expression.', Log::LOG_LEVEL_ERROR);
+                return $this->_isReplayEnabled;
+            }
+            if($this->_getReplayStartDate() === '')
+            {
+                $this->app->log->write('The feed\'s replay start date is an improperly formatted timestamp.', Log::LOG_LEVEL_ERROR);
+                return $this->_isReplayEnabled;
+            }
+            if($this->_getReplayOriginalStartDate() === '')
+            {
+                $this->app->log->write('The feed\'s replay original start date is an improperly formatted timestamp.', Log::LOG_LEVEL_ERROR);
+                return $this->_isReplayEnabled;
+            }
+            $this->_isReplayEnabled = true;
+        }
+        return $this->_isReplayEnabled;
+    }
+
+    protected function _getReplaySchedule()
+    {
+        if(!$this->_replaySchedule)
+        {
+            $this->_replaySchedule = false;
+            if(array_key_exists('schedule', $this->source->replay))
+            {
+                if(\Cron\CronExpression::isValidExpression($this->source->replay->schedule))
+                {
+                    $this->_replaySchedule = new \Cron\CronExpression($this->source->replay->schedule);
+                }
+            }
+        }
+        return $this->_replaySchedule;
+    }
+
+    protected function _getReplayStartDate()
+    {
+        if(!$this->_replayStartDate)
+        {
+            $this->_replayStartDate = '';
+            if(array_key_exists('replayStartDate', $this->source->replay))
+            {
+                $this->_replayStartDate = \DateTime::createFromFormat(\DateTime::RSS, $this->source->replay->replayStartDate);
+            }
+        }
+        return $this->_replayStartDate;
+    }
+
+    protected function _getReplayOriginalStartDate()
+    {
+        if(!$this->_replayOriginalStartDate)
+        {
+            $this->_replayOriginalStartDate = '';
+            if(array_key_exists('originalStartDate', $this->source->replay))
+            {
+                $this->_replayOriginalStartDate = \DateTime::createFromFormat(\DateTime::RSS, $this->source->replay->originalStartDate);
+            }
+        }
+        return $this->_replayOriginalStartDate;
+    }
+
+    protected function _getReplayQueue()
+    {
+        if(!$this->_replayQueue)
+        {
+            $this->_replayQueue = [];
+            if($this->_getIsReplayEnabled())
+            {
+                $nextDate = $this->_getReplayStartDate();
+                while($this->app->now > $nextDate = $this->_getReplaySchedule()->getNextRunDate($nextDate))
+                {
+                    $this->_replayQueue[] = $nextDate; 
+                }
+            }
+        }
+        return $this->_replayQueue;
+    }
+
     protected function _checkIfItemIsWanted($item)
     {
         // TODO: Allow global filters to be applied to all feeds alongside individual feed filters
@@ -276,7 +369,7 @@ class Feed
             }
         }
         // skip item if it is older than the max age allowed or scheduled for future publication
-        if($item->pubDate < $this->_getItemMaxAgeDate() || $item->pubDate > new \DateTime)
+        if($item->pubDate < $this->_getItemMaxAgeDate() || $item->pubDate > $this->app->now)
         {
             return false;
         }
