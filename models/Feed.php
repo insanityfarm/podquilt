@@ -125,17 +125,21 @@ class Feed
                 $itemNodes = $document->getElementsByTagName('item');
 	            $this->app->log->write('Beginning to parse feed: ' . $this->source->url, Log::LOG_LEVEL_INFO);
 
-                // loop through the item nodes, adding them to this feed
-                $index = 1; // set an incrementing loop index to limit the number of items
-                foreach($itemNodes as $itemNode)
+                // if replay's enabled, items will need to be traversed from the beginning (oldest first)
+                // otherwise, walk backwards in time from the most recent item
+                $initialIndex = $this->_getIsReplayEnabled() ? $itemNodes->length - 1 : 0;
+                $targetIndex = $this->_getIsReplayEnabled() ? -1 : $itemNodes->length;
+                $indexIncrement = $this->_getIsReplayEnabled() ? -1 : 1;
+                $itemsAdded = 0;
+                for($i = $initialIndex; $i !== $targetIndex; $i += $indexIncrement)
                 {
-                    if($index > $this->_getItemLimit())
+                    if($itemsAdded >= $this->_getItemLimit())
                     {
                         break;
                     }
 
                     // create an item object for this item node
-                    $item = new \Podquilt\Item($itemNode, $this->source);
+                    $item = new \Podquilt\Item($itemNodes[$i], $this->source);
 
                     // determine if item should be included in generated feed
                     if($this->_checkIfItemIsWanted($item))
@@ -143,12 +147,12 @@ class Feed
                         // add the item to this feed
 	                    $this->addItem($item);
                         // increment the index
-                        $index++;
+                        $itemsAdded++;
                     }
 
                 }
 
-	            $this->app->log->write('Parsing complete. ' . ($index - 1) . ' items were retrieved from feed.', Log::LOG_LEVEL_INFO);
+	            $this->app->log->write('Parsing complete. ' . ($itemsAdded) . ' items were retrieved from feed.', Log::LOG_LEVEL_INFO);
 
             }
         }
@@ -337,7 +341,7 @@ class Feed
 
     protected function _getReplayQueue()
     {
-        if(!$this->_replayQueue)
+        if(!isset($this->_replayQueue))
         {
             $this->_replayQueue = [];
             if($this->_getIsReplayEnabled())
@@ -345,14 +349,14 @@ class Feed
                 $nextDate = $this->_getReplayStartDate();
                 while($this->app->now > $nextDate = $this->_getReplaySchedule()->getNextRunDate($nextDate))
                 {
-                    $this->_replayQueue[] = $nextDate; 
+                    $this->_replayQueue[] = $nextDate;
                 }
             }
         }
         return $this->_replayQueue;
     }
 
-    protected function _checkIfItemIsWanted($item)
+    protected function _checkIfItemIsWanted(&$item)
     {
         // TODO: Allow global filters to be applied to all feeds alongside individual feed filters
         // apply filter(s) if any are defined for this feed
@@ -366,6 +370,33 @@ class Feed
                 {
                     return false;
                 }
+            }
+        }
+        if($this->_getIsReplayEnabled())
+        {
+
+            // don't include unqueued items or older than configured original start date for replay
+            if(!$this->_getReplayQueue() || $item->pubDate < $this->_getReplayOriginalStartDate())
+            {
+                return false;
+            }
+
+            // TODO: Refactor this side effect to a better location, shouldn't mutate items inside "check" func!
+            // apply replay schedule pubDate to the item, if needed
+            $item->pubDate = array_shift($this->_replayQueue);
+            
+            $pubDateNodes = $item->node->getElementsByTagName('pubDate');
+            if($pubDateNodes->length)
+            {
+                foreach($pubDateNodes as $pubDateNode)
+                {
+                    $pubDateNode->nodeValue = $item->pubDate->format(\DateTime::RSS);
+                }
+            }
+
+            if(count($this->_getReplayQueue()) > $this->_getItemLimit())
+            {
+                return false;
             }
         }
         // skip item if it is older than the max age allowed or scheduled for future publication

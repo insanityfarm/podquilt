@@ -5,30 +5,36 @@ namespace Podquilt;
 class Config
 {
 
+	// TODO: Actually use these consts consistently through the app...
+
     const DEFAULT_ITEM_LIMIT    = 10;   // don't include more than this many items per feed
     const DEFAULT_ITEM_MAX_AGE  = 14;   // max number of days to retain old items
 
-	const CONFIG_KEY_CHANNEL                = 'channel';
-	const CONFIG_KEY_CHANNEL_DESCRIPTION    = 'description';
-	const CONFIG_KEY_CHANNEL_LINK           = 'link';
-	const CONFIG_KEY_CHANNEL_TITLE          = 'title';
+	const CONFIG_KEY_CHANNEL                            = 'channel';
+	const CONFIG_KEY_CHANNEL_DESCRIPTION                = 'description';
+	const CONFIG_KEY_CHANNEL_LINK                       = 'link';
+	const CONFIG_KEY_CHANNEL_TITLE                      = 'title';
 
-	const CONFIG_KEY_FEEDS                  = 'feeds';
-	const CONFIG_KEY_FEEDS_DISABLED         = 'disabled';
-	const CONFIG_KEY_FEEDS_FILTER           = 'filter';
-	const CONFIG_KEY_FEEDS_PREPEND          = 'prepend';
-	const CONFIG_KEY_FEEDS_URL              = 'url';
+	const CONFIG_KEY_FEEDS                              = 'feeds';
+	const CONFIG_KEY_FEEDS_DISABLED                     = 'disabled';
+	const CONFIG_KEY_FEEDS_FILTER                       = 'filter';
+	const CONFIG_KEY_FEEDS_PREPEND                      = 'prepend';
+	const CONFIG_KEY_FEEDS_REPLAY                       = 'replay';
+	const CONFIG_KEY_FEEDS_REPLAY_ORIGINALSTARTDATE     = 'originalStartDate';
+	const CONFIG_KEY_FEEDS_REPLAY_REPLAYSTARTDATE       = 'replayStartDate';
+	const CONFIG_KEY_FEEDS_REPLAY_SCHEDULE              = 'schedule';
+	const CONFIG_KEY_FEEDS_URL                          = 'url';
 
-	const CONFIG_KEY_FILES                  = 'files';
-	const CONFIG_KEY_FILES_DESCRIPTION      = 'description';
-	const CONFIG_KEY_FILES_PUBDATE          = 'pubDate';
-	const CONFIG_KEY_FILES_TITLE            = 'title';
-	const CONFIG_KEY_FILES_URL              = 'url';
+	const CONFIG_KEY_FILES                              = 'files';
+	const CONFIG_KEY_FILES_DESCRIPTION                  = 'description';
+	const CONFIG_KEY_FILES_PUBDATE                      = 'pubDate';
+	const CONFIG_KEY_FILES_TITLE                        = 'title';
+	const CONFIG_KEY_FILES_URL                          = 'url';
 
-	const CONFIG_KEY_LOGS                   = 'logs';
-	const CONFIG_KEY_LOGS_ENABLED           = 'enabled';
-	const CONFIG_KEY_LOGS_LEVEL             = 'level';
-	const CONFIG_KEY_LOGS_PATH              = 'path';
+	const CONFIG_KEY_LOGS                               = 'logs';
+	const CONFIG_KEY_LOGS_ENABLED                       = 'enabled';
+	const CONFIG_KEY_LOGS_LEVEL                         = 'level';
+	const CONFIG_KEY_LOGS_PATH                          = 'path';
 
 	protected $_data;
 	protected $_defaults;
