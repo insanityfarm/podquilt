@@ -366,7 +366,7 @@ class Feed
             foreach($this->source->filter as $node => $pattern)
             {
                 // only evaluate regex against nodes that actually exist on the item
-                if(array_key_exists($node, $item) && preg_match('/'.$pattern.'/i', $item->$node) === 0)
+                if(array_key_exists($node, $item) && preg_match('/'.$pattern.'/is', $item->$node) === 0)
                 {
                     return false;
                 }
