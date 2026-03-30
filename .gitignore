@@ -10,8 +10,7 @@ config.json
 # Don't commit log files or media
 /logs/*
 !/logs/.htaccess
-/media/*
-!/media/.htaccess
+/media
 
 # Don't commit composer dependencies
 /vendor
