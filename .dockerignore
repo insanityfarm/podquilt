@@ -1,0 +1,12 @@
+.git
+.gitignore
+.DS_Store
+vendor
+logs
+media
+config.json
+.php-cs-fixer.cache
+.phpstan
+.phpunit.cache
+run-local.sh
+stop-local.sh

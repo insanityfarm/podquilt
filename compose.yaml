@@ -1,0 +1,15 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        COMPOSER_VERSION: 2.9.5
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      COMPOSER_ALLOW_SUPERUSER: "1"
+      COMPOSER_HOME: /tmp/composer
+    command: composer serve

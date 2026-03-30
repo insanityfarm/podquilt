@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+  <channel>
+    <title>Primary Feed</title>
+    <item>
+      <title>Future Episode</title>
+      <description>Future episode description.</description>
+      <guid>future-guid</guid>
+      <pubDate>Tue, 02 Apr 2024 09:00:00 +0000</pubDate>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+    <item>
+      <title>Newest Episode</title>
+      <description>Newest episode description.</description>
+      <guid>newest-guid</guid>
+      <pubDate>Sun, 31 Mar 2024 10:00:00 +0000</pubDate>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+    <item>
+      <title>Trailer Episode</title>
+      <description>Trailer episode description.</description>
+      <guid>trailer-guid</guid>
+      <pubDate>Sat, 30 Mar 2024 09:00:00 +0000</pubDate>
+      <itunes:episodeType>trailer</itunes:episodeType>
+    </item>
+    <item>
+      <title>Missing Guid Episode</title>
+      <description>Missing guid description.</description>
+      <pubDate>Fri, 29 Mar 2024 11:30:00 +0000</pubDate>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+    <item>
+      <title>Too Old Episode</title>
+      <description>Too old description.</description>
+      <guid>old-guid</guid>
+      <pubDate>Sun, 10 Mar 2024 08:00:00 +0000</pubDate>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Secondary Feed</title>
+    <item>
+      <title>Secondary Recent</title>
+      <description>Secondary recent description.</description>
+      <guid>secondary-guid-1</guid>
+      <pubDate>Sun, 31 Mar 2024 08:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Secondary Older</title>
+      <description>Secondary older description.</description>
+      <guid>secondary-guid-2</guid>
+      <pubDate>Thu, 28 Mar 2024 08:00:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>
+TRAILING_GARBAGE

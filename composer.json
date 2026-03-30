@@ -1,8 +1,45 @@
 {
-	"config": {
-		"optimize-autoloader": true
-	},
+    "name": "insanityfarm/podquilt",
+    "description": "Merge multiple podcast feeds into a single personal RSS feed.",
+    "type": "project",
+    "license": "MIT",
     "require": {
-        "dragonmantank/cron-expression": "3.1.*"
+        "php": "^8.5",
+        "ext-dom": "*",
+        "ext-hash": "*",
+        "ext-json": "*",
+        "ext-libxml": "*",
+        "dragonmantank/cron-expression": "^3.6",
+        "symfony/http-client": "^8.0"
+    },
+    "require-dev": {
+        "php-cs-fixer/shim": "^3.93",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^13.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Podquilt\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Podquilt\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "serve": "@php -S 0.0.0.0:8000 -t .",
+        "test": "phpunit --configuration phpunit.xml",
+        "analyse": "phpstan analyse --configuration phpstan.neon --memory-limit=1G",
+        "format": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --allow-risky=yes",
+        "check": [
+            "@test",
+            "@analyse",
+            "php-cs-fixer fix --config=.php-cs-fixer.dist.php --allow-risky=yes --dry-run --diff"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
     }
 }

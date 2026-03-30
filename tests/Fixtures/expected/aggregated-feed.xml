@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>Merged Feed</title>
+    <link>https://example.test/podquilt</link>
+    <description>Fixture-generated merged feed.</description>
+    <item xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+      <title>Primary: Newest Episode</title>
+      <description>Newest episode description.</description>
+      <guid>49d0c2774f46c2ef21ba9b669ce22604e9af10f9ec46587f82d789d20fc96840</guid>
+      <pubDate>Sun, 31 Mar 2024 10:00:00 +0000</pubDate>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+    <item>
+      <title>Secondary Recent</title>
+      <description>Secondary recent description.</description>
+      <guid>8a953abd326fe623ed4c1341b21edfdb8f035fe9a6973ebeecf6538844afce16</guid>
+      <pubDate>Sun, 31 Mar 2024 08:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Local Episode</title>
+      <description>Local file-backed episode.</description>
+      <pubDate>Sat, 30 Mar 2024 12:00:00 +0000</pubDate>
+      <enclosure url="https://example.test/audio.mp3"/>
+      <guid>f6aa81aa082fb2f5c30af1e83843bb1e728c19b6424e715e2235e4f68f1d0d80</guid>
+    </item>
+    <item xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+      <title>Primary: Missing Guid Episode</title>
+      <description>Missing guid description.</description>
+      <pubDate>Fri, 29 Mar 2024 11:30:00 +0000</pubDate>
+      <itunes:episodeType>full</itunes:episodeType>
+      <guid>b96ccf541466c1ef3788137d3ef5ea32a900f844387958653b6560bf463b67c9</guid>
+    </item>
+  </channel>
+</rss>

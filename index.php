@@ -1,14 +1,24 @@
 <?php
 
-require_once('Podquilt.php');
+declare(strict_types=1);
+
+use Podquilt\Application\ApplicationFactory;
+use Podquilt\Runtime\RequestContext;
+
 require __DIR__ . '/vendor/autoload.php';
 
-$podquilt = new \Podquilt\Podquilt;
+$requestContext = RequestContext::fromGlobals();
+$application = ApplicationFactory::create(__DIR__);
 
-header("Content-Type: application/rss+xml; charset=utf-8");
-header("Content-Disposition: inline");
-header("Cache-control: no-cache");
+try {
+    header('Content-Type: application/rss+xml; charset=utf-8');
+    header('Content-Disposition: inline');
+    header('Cache-Control: no-cache');
 
-echo $podquilt->sortItemsByPubDate()->toXml();
+    echo $application->render(__DIR__ . '/config.json', $requestContext);
+} catch (Throwable $throwable) {
+    http_response_code(500);
+    header('Content-Type: text/html; charset=utf-8');
 
-$podquilt->logExecutionTime();
+    echo '<pre>' . htmlspecialchars((string) $throwable, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</pre>';
+}

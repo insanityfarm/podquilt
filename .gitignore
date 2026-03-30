@@ -12,5 +12,10 @@ config.json
 !/logs/.htaccess
 /media
 
-# Don't commit composer dependencies
+# Don't commit Composer dependencies
 /vendor
+
+# Local tool caches
+/.php-cs-fixer.cache
+/.phpstan
+/.phpunit.cache
