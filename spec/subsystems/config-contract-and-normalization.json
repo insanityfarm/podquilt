@@ -1,0 +1,96 @@
+{
+    "id": "config-contract-and-normalization",
+    "title": "Config contract and normalization",
+    "status": "locked",
+    "summary": "Owns the public config.json schema, defaults, warnings, and normalization behavior that Podquilt preserves across refactors.",
+    "owned_paths": [
+        "config.json.example",
+        "src/Config/**",
+        "tests/ConfigLoaderTest.php"
+    ],
+    "related_paths": [
+        "README.md"
+    ],
+    "entrypoints": [
+        {
+            "path": "src/Config/ConfigLoader.php",
+            "symbols": [
+                "ConfigLoader::load"
+            ]
+        }
+    ],
+    "depends_on": [
+        "runtime-and-logging"
+    ],
+    "used_by": [
+        "request-entry-and-composition",
+        "feed-selection-and-replay",
+        "feed-orchestration",
+        "rss-item-and-rendering-contract"
+    ],
+    "required_reads": {
+        "spec": [
+            "spec/README.md",
+            "spec/tooling-and-quality.md"
+        ],
+        "docs": [
+            "docs/context-system/README.md"
+        ],
+        "decisions": [
+            "spec/decisions/ADR-0002-locked-subsystem-edit-policy.md"
+        ]
+    },
+    "glossary_terms": [
+        "config contract",
+        "locked subsystem"
+    ],
+    "public_contracts": [
+        {
+            "name": "config.json schema",
+            "summary": "Defines the recognized top-level sections and source/channel/log/http behavior Podquilt accepts."
+        },
+        {
+            "name": "ConfigLoader::load",
+            "summary": "Normalizes config.json into typed immutable DTOs without breaking historical behavior."
+        }
+    ],
+    "invariants": [
+        {
+            "id": "config-001",
+            "statement": "Unknown config keys stay ignored rather than causing request failures."
+        },
+        {
+            "id": "config-002",
+            "statement": "Only the literal string \"true\" disables a feed or file source."
+        },
+        {
+            "id": "config-003",
+            "statement": "Invalid max_concurrent_requests values fall back to the default and record a warning."
+        },
+        {
+            "id": "config-004",
+            "statement": "Default channel metadata continues to derive the link from RequestContext."
+        }
+    ],
+    "performance_constraints": [
+        "Config normalization stays cheap enough to run on every request without caching."
+    ],
+    "change_policy": {
+        "default": "additive-with-validation",
+        "requires_adr": [
+            "changing the public config schema",
+            "changing fallback or warning behavior",
+            "changing historical disabled-source semantics"
+        ]
+    },
+    "tests": [
+        "tests/ConfigLoaderTest.php"
+    ],
+    "decision_refs": [
+        "ADR-0002"
+    ],
+    "history_anchors": {
+        "introduced_by": "2026-03-30-anti-drift-adoption",
+        "major_refactors": []
+    }
+}

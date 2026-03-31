@@ -1,0 +1,82 @@
+{
+    "id": "request-entry-and-composition",
+    "title": "Request entry and composition",
+    "status": "stable",
+    "summary": "Owns the front controller and production dependency graph that turn one HTTP request into one rendered RSS response.",
+    "owned_paths": [
+        "index.php",
+        "src/Application/**"
+    ],
+    "related_paths": [
+        "src/Runtime/RequestContext.php",
+        "src/Feed/PodquiltService.php"
+    ],
+    "entrypoints": [
+        {
+            "path": "index.php",
+            "symbols": [
+                "front controller"
+            ]
+        },
+        {
+            "path": "src/Application/ApplicationFactory.php",
+            "symbols": [
+                "ApplicationFactory::create"
+            ]
+        }
+    ],
+    "depends_on": [
+        "config-contract-and-normalization",
+        "feed-orchestration",
+        "runtime-and-logging"
+    ],
+    "used_by": [
+        "repo-governance-context-system"
+    ],
+    "required_reads": {
+        "spec": [
+            "spec/README.md",
+            "spec/tooling-and-quality.md"
+        ],
+        "docs": [
+            "docs/context-system/README.md"
+        ],
+        "decisions": [
+            "spec/decisions/ADR-0003-local-only-anti-drift-enforcement-and-composer-verify.md"
+        ]
+    },
+    "glossary_terms": [
+        "authoritative artifact"
+    ],
+    "public_contracts": [
+        {
+            "name": "index.php request lifecycle",
+            "summary": "Bootstraps Podquilt, loads config.json, renders RSS, and emits a 500 with escaped exception details on failure."
+        }
+    ],
+    "invariants": [
+        {
+            "id": "entry-001",
+            "statement": "The front controller stays thin and delegates production wiring to ApplicationFactory."
+        },
+        {
+            "id": "entry-002",
+            "statement": "Application orchestration does not change config or feed behavior on its own."
+        }
+    ],
+    "performance_constraints": [
+        "Request composition should stay simple enough that business logic lives below the entry layer."
+    ],
+    "change_policy": {
+        "default": "additive-with-validation",
+        "requires_adr": []
+    },
+    "tests": [],
+    "decision_refs": [
+        "ADR-0003"
+    ],
+    "history_anchors": {
+        "introduced_by": "2026-03-30-anti-drift-adoption",
+        "major_refactors": []
+    }
+}

@@ -1,0 +1,112 @@
+{
+    "id": "feed-selection-and-replay",
+    "title": "Feed selection and replay",
+    "status": "locked",
+    "summary": "Owns remote and file-backed item inclusion, exclusion, replay scheduling, and publication-window behavior before final rendering.",
+    "owned_paths": [
+        "src/Feed/FileFeedSourceProcessor.php",
+        "src/Feed/ItemSelectionOutcome.php",
+        "src/Feed/ItemSelectionResult.php",
+        "src/Feed/PreparedRemoteFeed.php",
+        "src/Feed/PublicationWindow.php",
+        "src/Feed/RemoteFeedSourceProcessor.php",
+        "src/Feed/ReplayPlan.php",
+        "tests/FileFeedSourceProcessorTest.php",
+        "tests/RemoteFeedSourceProcessorTest.php"
+    ],
+    "related_paths": [
+        "tests/Fixtures/feeds/**"
+    ],
+    "entrypoints": [
+        {
+            "path": "src/Feed/RemoteFeedSourceProcessor.php",
+            "symbols": [
+                "RemoteFeedSourceProcessor::prepareFeed",
+                "RemoteFeedSourceProcessor::collectItemsFromFetchResult"
+            ]
+        },
+        {
+            "path": "src/Feed/FileFeedSourceProcessor.php",
+            "symbols": [
+                "FileFeedSourceProcessor::collectItems"
+            ]
+        }
+    ],
+    "depends_on": [
+        "config-contract-and-normalization",
+        "http-fetching",
+        "runtime-and-logging",
+        "test-support-and-fixtures"
+    ],
+    "used_by": [
+        "feed-orchestration",
+        "repo-governance-context-system"
+    ],
+    "required_reads": {
+        "spec": [
+            "spec/README.md",
+            "spec/testing-style.md"
+        ],
+        "docs": [
+            "docs/context-system/README.md"
+        ],
+        "decisions": [
+            "spec/decisions/ADR-0002-locked-subsystem-edit-policy.md"
+        ]
+    },
+    "glossary_terms": [
+        "selection semantics",
+        "locked subsystem",
+        "config contract"
+    ],
+    "public_contracts": [
+        {
+            "name": "remote source selection semantics",
+            "summary": "Defines validation, replay, filtering, age-window, and logging behavior for remote feeds."
+        },
+        {
+            "name": "file source selection semantics",
+            "summary": "Defines validation and age-window behavior for synthetic config-backed file items."
+        }
+    ],
+    "invariants": [
+        {
+            "id": "select-001",
+            "statement": "Publication windows are inclusive and shared across remote and file-backed sources."
+        },
+        {
+            "id": "select-002",
+            "statement": "Remote feed bodies may still be parsed when the HTTP status code is non-200."
+        },
+        {
+            "id": "select-003",
+            "statement": "Buffered remote feed logs flush in configured source order rather than fetch completion order."
+        },
+        {
+            "id": "select-004",
+            "statement": "Replay keeps the current reverse-order scheduling and still respects item-limit and age-window rules."
+        }
+    ],
+    "performance_constraints": [
+        "Remote selection should stay linear in item count once the feed body has been fetched."
+    ],
+    "change_policy": {
+        "default": "additive-with-validation",
+        "requires_adr": [
+            "changing replay semantics",
+            "changing publication-window boundaries",
+            "changing non-200 parsing behavior"
+        ]
+    },
+    "tests": [
+        "tests/RemoteFeedSourceProcessorTest.php",
+        "tests/FileFeedSourceProcessorTest.php"
+    ],
+    "decision_refs": [
+        "ADR-0002"
+    ],
+    "history_anchors": {
+        "introduced_by": "2026-03-30-anti-drift-adoption",
+        "major_refactors": []
+    }
+}

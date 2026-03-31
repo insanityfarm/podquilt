@@ -1,0 +1,68 @@
+{
+    "id": "http-fetching",
+    "title": "HTTP fetching",
+    "status": "stable",
+    "summary": "Owns validated request descriptors and bounded batch fetching for remote feed bodies.",
+    "owned_paths": [
+        "src/Http/**",
+        "tests/SymfonyFeedFetcherTest.php"
+    ],
+    "related_paths": [
+        "tests/Support/FixtureFeedFetcher.php"
+    ],
+    "entrypoints": [
+        {
+            "path": "src/Http/SymfonyFeedFetcher.php",
+            "symbols": [
+                "SymfonyFeedFetcher::fetchMany"
+            ]
+        }
+    ],
+    "depends_on": [],
+    "used_by": [
+        "feed-selection-and-replay",
+        "feed-orchestration",
+        "test-support-and-fixtures"
+    ],
+    "required_reads": {
+        "spec": [
+            "spec/README.md"
+        ],
+        "docs": [],
+        "decisions": []
+    },
+    "glossary_terms": [
+        "selection semantics"
+    ],
+    "public_contracts": [
+        {
+            "name": "FeedFetcherInterface::fetchMany",
+            "summary": "Executes validated feed requests with bounded concurrency and returns results keyed by request id."
+        }
+    ],
+    "invariants": [
+        {
+            "id": "http-001",
+            "statement": "Configured concurrency limits are honored when fetching batches."
+        },
+        {
+            "id": "http-002",
+            "statement": "Non-200 responses return status and content instead of throwing into feed orchestration."
+        }
+    ],
+    "performance_constraints": [
+        "Remote fetching should keep the active response pool bounded by the configured concurrency limit."
+    ],
+    "change_policy": {
+        "default": "additive-with-validation",
+        "requires_adr": []
+    },
+    "tests": [
+        "tests/SymfonyFeedFetcherTest.php"
+    ],
+    "decision_refs": [],
+    "history_anchors": {
+        "introduced_by": "2026-03-30-anti-drift-adoption",
+        "major_refactors": []
+    }
+}

@@ -19,3 +19,4 @@ config.json
 /.php-cs-fixer.cache
 /.phpstan
 /.phpunit.cache
+/.agent-context

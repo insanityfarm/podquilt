@@ -1,0 +1,75 @@
+{
+    "id": "feed-orchestration",
+    "title": "Feed orchestration",
+    "status": "stable",
+    "summary": "Owns request-scoped orchestration of source preparation, bounded fetching, merge ordering, and final rendering.",
+    "owned_paths": [
+        "src/Feed/PodquiltService.php",
+        "tests/PodquiltServiceTest.php"
+    ],
+    "related_paths": [
+        "tests/PodquiltServiceGoldenTest.php"
+    ],
+    "entrypoints": [
+        {
+            "path": "src/Feed/PodquiltService.php",
+            "symbols": [
+                "PodquiltService::render"
+            ]
+        }
+    ],
+    "depends_on": [
+        "config-contract-and-normalization",
+        "feed-selection-and-replay",
+        "rss-item-and-rendering-contract",
+        "http-fetching",
+        "runtime-and-logging",
+        "test-support-and-fixtures"
+    ],
+    "used_by": [
+        "request-entry-and-composition"
+    ],
+    "required_reads": {
+        "spec": [
+            "spec/README.md",
+            "spec/testing-style.md"
+        ],
+        "docs": [],
+        "decisions": []
+    },
+    "glossary_terms": [
+        "selection semantics",
+        "rendering contract"
+    ],
+    "public_contracts": [
+        {
+            "name": "PodquiltService::render",
+            "summary": "Coordinates remote and file-backed sources and returns the final RSS document for one request."
+        }
+    ],
+    "invariants": [
+        {
+            "id": "orchestrate-001",
+            "statement": "Remote requests are prepared before fetching and file-backed items are appended after remote feeds resolve."
+        },
+        {
+            "id": "orchestrate-002",
+            "statement": "Merged items are sorted newest-first before rendering."
+        }
+    ],
+    "performance_constraints": [
+        "The service should batch remote fetches instead of serializing them one by one."
+    ],
+    "change_policy": {
+        "default": "additive-with-validation",
+        "requires_adr": []
+    },
+    "tests": [
+        "tests/PodquiltServiceTest.php"
+    ],
+    "decision_refs": [],
+    "history_anchors": {
+        "introduced_by": "2026-03-30-anti-drift-adoption",
+        "major_refactors": []
+    }
+}

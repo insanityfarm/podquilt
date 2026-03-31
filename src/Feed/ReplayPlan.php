@@ -7,7 +7,7 @@ namespace Podquilt\Feed;
 use DateTimeImmutable;
 
 /**
- * Precomputes the replay schedule so selection logic can stay deterministic and efficient.
+ * Precomputes the replay schedule so selection semantics stay deterministic and efficient.
  */
 final readonly class ReplayPlan
 {

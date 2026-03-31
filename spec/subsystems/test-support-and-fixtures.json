@@ -1,0 +1,73 @@
+{
+    "id": "test-support-and-fixtures",
+    "title": "Test support and fixtures",
+    "status": "stable",
+    "summary": "Owns shared PHPUnit support classes and fixture files that keep Podquilt's regression suite hermetic and deterministic.",
+    "owned_paths": [
+        "tests/Fixtures/**",
+        "tests/Support/**"
+    ],
+    "related_paths": [
+        "tests/*.php"
+    ],
+    "entrypoints": [
+        {
+            "path": "tests/Support/FixtureFeedFetcher.php",
+            "symbols": [
+                "FixtureFeedFetcher"
+            ]
+        },
+        {
+            "path": "tests/Support/FrozenClock.php",
+            "symbols": [
+                "FrozenClock"
+            ]
+        }
+    ],
+    "depends_on": [
+        "http-fetching",
+        "runtime-and-logging"
+    ],
+    "used_by": [
+        "feed-selection-and-replay",
+        "rss-item-and-rendering-contract",
+        "feed-orchestration",
+        "repo-governance-context-system"
+    ],
+    "required_reads": {
+        "spec": [
+            "spec/README.md",
+            "spec/testing-style.md"
+        ],
+        "docs": [],
+        "decisions": []
+    },
+    "glossary_terms": [
+        "authoritative artifact"
+    ],
+    "public_contracts": [
+        {
+            "name": "fixture-driven test support",
+            "summary": "Provides deterministic helpers and sample feeds so automated tests never rely on live remote services."
+        }
+    ],
+    "invariants": [
+        {
+            "id": "test-001",
+            "statement": "Fixtures and support helpers stay hermetic and free from live network dependencies."
+        }
+    ],
+    "performance_constraints": [
+        "Test support should stay lightweight enough to use in temp-repo anti-drift tests."
+    ],
+    "change_policy": {
+        "default": "additive-with-validation",
+        "requires_adr": []
+    },
+    "tests": [],
+    "decision_refs": [],
+    "history_anchors": {
+        "introduced_by": "2026-03-30-anti-drift-adoption",
+        "major_refactors": []
+    }
+}

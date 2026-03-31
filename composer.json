@@ -13,6 +13,7 @@
         "symfony/http-client": "^8.0"
     },
     "require-dev": {
+        "nikic/php-parser": "^5.7",
         "php-cs-fixer/shim": "^3.93",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^13.0"
@@ -24,7 +25,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Podquilt\\Tests\\": "tests/"
+            "Podquilt\\Tests\\": "tests/",
+            "Podquilt\\Tools\\ContextSystem\\": "tools/context-system/src/"
         }
     },
     "scripts": {
@@ -32,10 +34,24 @@
         "test": "phpunit --configuration phpunit.xml",
         "analyse": "phpstan analyse --configuration phpstan.neon --memory-limit=1G",
         "format": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --allow-risky=yes",
+        "context:build": "@php tools/context-system/bin/build.php",
+        "context:task": "@php tools/context-system/bin/task.php",
+        "context:check": "@php tools/context-system/bin/check.php",
+        "terms:check": "@php tools/context-system/bin/terms.php",
+        "comments:check": "@php tools/context-system/bin/comments.php",
+        "arch:check": "@php tools/context-system/bin/architecture.php",
+        "drift:review": "@php tools/context-system/bin/review.php",
         "check": [
             "@test",
             "@analyse",
             "php-cs-fixer fix --config=.php-cs-fixer.dist.php --allow-risky=yes --dry-run --diff"
+        ],
+        "verify": [
+            "@check",
+            "@terms:check",
+            "@comments:check",
+            "@arch:check",
+            "@context:check"
         ]
     },
     "config": {

@@ -1,0 +1,108 @@
+{
+    "id": "rss-item-and-rendering-contract",
+    "title": "RSS item and rendering contract",
+    "status": "locked",
+    "summary": "Owns item rewriting, GUID behavior, namespace preservation, and final RSS serialization behavior.",
+    "owned_paths": [
+        "src/Feed/FeedItem.php",
+        "src/Feed/RssRenderer.php",
+        "tests/FeedItemTest.php",
+        "tests/PodquiltServiceGoldenTest.php",
+        "tests/RssRendererTest.php"
+    ],
+    "related_paths": [
+        "tests/Fixtures/expected/**"
+    ],
+    "entrypoints": [
+        {
+            "path": "src/Feed/FeedItem.php",
+            "symbols": [
+                "FeedItem::withHashedGuid",
+                "FeedItem::withPrependedTitle",
+                "FeedItem::withPublishedAt"
+            ]
+        },
+        {
+            "path": "src/Feed/RssRenderer.php",
+            "symbols": [
+                "RssRenderer::render"
+            ]
+        }
+    ],
+    "depends_on": [
+        "config-contract-and-normalization",
+        "test-support-and-fixtures"
+    ],
+    "used_by": [
+        "feed-orchestration",
+        "repo-governance-context-system"
+    ],
+    "required_reads": {
+        "spec": [
+            "spec/README.md",
+            "spec/testing-style.md"
+        ],
+        "docs": [
+            "docs/context-system/README.md"
+        ],
+        "decisions": [
+            "spec/decisions/ADR-0002-locked-subsystem-edit-policy.md"
+        ]
+    },
+    "glossary_terms": [
+        "rendering contract",
+        "locked subsystem",
+        "selection semantics"
+    ],
+    "public_contracts": [
+        {
+            "name": "FeedItem mutation helpers",
+            "summary": "Rewrite only direct child nodes and preserve deterministic GUID and publication-date behavior."
+        },
+        {
+            "name": "RssRenderer::render",
+            "summary": "Produces the final merged RSS document while preserving namespaced item children."
+        }
+    ],
+    "invariants": [
+        {
+            "id": "render-001",
+            "statement": "Only direct item children participate in title, GUID, and pubDate rewrites."
+        },
+        {
+            "id": "render-002",
+            "statement": "GUID hashing remains deterministic and missing GUIDs derive from title plus description."
+        },
+        {
+            "id": "render-003",
+            "statement": "Namespaced item children survive rendering and their namespace declarations are hoisted to the root rss element."
+        },
+        {
+            "id": "render-004",
+            "statement": "The final merged feed remains sorted newest-first after all sources are combined."
+        }
+    ],
+    "performance_constraints": [
+        "Rendering should preserve source XML structure rather than rebuilding item payloads field by field."
+    ],
+    "change_policy": {
+        "default": "additive-with-validation",
+        "requires_adr": [
+            "changing GUID derivation",
+            "changing namespace preservation behavior",
+            "changing final sort order or serialization rules"
+        ]
+    },
+    "tests": [
+        "tests/FeedItemTest.php",
+        "tests/RssRendererTest.php",
+        "tests/PodquiltServiceGoldenTest.php"
+    ],
+    "decision_refs": [
+        "ADR-0002"
+    ],
+    "history_anchors": {
+        "introduced_by": "2026-03-30-anti-drift-adoption",
+        "major_refactors": []
+    }
+}

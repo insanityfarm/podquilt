@@ -1,0 +1,80 @@
+{
+    "id": "runtime-and-logging",
+    "title": "Runtime and logging",
+    "status": "stable",
+    "summary": "Owns time, request, URI, and logging seams that keep business logic deterministic and observable.",
+    "owned_paths": [
+        "src/Logging/**",
+        "src/Runtime/**"
+    ],
+    "related_paths": [
+        "tests/Support/BufferedLogger.php",
+        "tests/Support/FrozenClock.php"
+    ],
+    "entrypoints": [
+        {
+            "path": "src/Runtime/RequestContext.php",
+            "symbols": [
+                "RequestContext::fromGlobals"
+            ]
+        },
+        {
+            "path": "src/Logging/LoggerFactory.php",
+            "symbols": [
+                "LoggerFactory::create"
+            ]
+        }
+    ],
+    "depends_on": [
+        "config-contract-and-normalization"
+    ],
+    "used_by": [
+        "request-entry-and-composition",
+        "feed-selection-and-replay",
+        "feed-orchestration",
+        "test-support-and-fixtures"
+    ],
+    "required_reads": {
+        "spec": [
+            "spec/README.md"
+        ],
+        "docs": [],
+        "decisions": []
+    },
+    "glossary_terms": [
+        "authoritative artifact"
+    ],
+    "public_contracts": [
+        {
+            "name": "ClockInterface / RequestContext / UriFactory",
+            "summary": "Provide deterministic seams for time, request metadata, and URI parsing."
+        },
+        {
+            "name": "LoggerInterface",
+            "summary": "Provides the minimal structured logging contract Podquilt uses across orchestration and feed processing."
+        }
+    ],
+    "invariants": [
+        {
+            "id": "runtime-001",
+            "statement": "Runtime seams stay injectable so tests can remain deterministic."
+        },
+        {
+            "id": "runtime-002",
+            "statement": "File logger paths resolve relative to the project root unless configured as absolute paths."
+        }
+    ],
+    "performance_constraints": [
+        "Logging and runtime helpers should stay small and side-effect bounded."
+    ],
+    "change_policy": {
+        "default": "additive-with-validation",
+        "requires_adr": []
+    },
+    "tests": [],
+    "decision_refs": [],
+    "history_anchors": {
+        "introduced_by": "2026-03-30-anti-drift-adoption",
+        "major_refactors": []
+    }
+}

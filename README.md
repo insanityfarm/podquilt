@@ -54,6 +54,13 @@ Composer is the public task runner for the project. The most useful commands are
 - `composer analyse` runs PHPStan with the project's strict configuration
 - `composer format` applies the PHP CS Fixer rules
 - `composer check` runs tests, static analysis, and a dry-run formatting check
+- `composer context:build` regenerates tracked anti-drift artifacts
+- `composer context:task -- "<task>"` writes the repo-local active task packet
+- `composer terms:check` rejects discouraged glossary replacements
+- `composer comments:check` rejects backlog comments and reasonless `@phpstan-ignore` directives
+- `composer arch:check` rejects forbidden internal dependency edges
+- `composer drift:review` writes a bounded drift-review packet under `.agent-context/`
+- `composer verify` runs `check` plus the anti-drift checks
 - `composer audit` checks dependencies for published security advisories
 
 With Docker, the same commands are available through `docker compose run --rm app composer ...`, for example:
@@ -62,6 +69,22 @@ With Docker, the same commands are available through `docker compose run --rm ap
 docker compose run --rm app composer check
 docker compose run --rm app composer audit
 ```
+
+## Anti-Drift Workflow
+
+Podquilt keeps its architecture memory inside the repository instead of leaving it implicit in prompts or contributor memory.
+
+For local feature work, the daily flow is:
+
+1. Read [`spec/README.md`](./spec/README.md).
+2. Read [`glossary/README.md`](./glossary/README.md).
+3. Run `composer context:task -- "<task>"`.
+4. Read `.agent-context/active-task.md`.
+5. Update code plus any touched subsystem records, ADRs, and docs in the same change.
+6. Run `composer context:build` if glossary or subsystem source files changed.
+7. Run `composer verify`.
+
+`composer verify` is the local done condition for anti-drift work. `composer check` remains the narrower CI-safe command used by the repository workflow.
 
 ## Configuration Guide
 

@@ -1,0 +1,1538 @@
+{
+    "generatedBy": "composer context:build",
+    "version": 1,
+    "files": [
+        {
+            "path": ".dockerignore",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": ".github/workflows/ci.yml",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": ".gitignore",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": ".htaccess",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": ".php-cs-fixer.dist.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "AGENTS.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "Dockerfile",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "LICENSE",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "README.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "compose.yaml",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "composer.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "composer.lock",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "config.json.example",
+            "type": "text",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "docs/README.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "docs/context-system/README.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "docs/repo-workflow/README.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "glossary/terms.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "index.php",
+            "type": "code",
+            "owners": [
+                "request-entry-and-composition"
+            ],
+            "imports": [
+                "src/Application/ApplicationFactory.php",
+                "src/Runtime/RequestContext.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "phpstan.neon",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "phpunit.xml",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/README.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/comment-style.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/decisions/ADR-0001-anti-drift-context-system.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/decisions/ADR-0002-locked-subsystem-edit-policy.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/decisions/ADR-0003-local-only-anti-drift-enforcement-and-composer-verify.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/subsystems/config-contract-and-normalization.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/subsystems/feed-orchestration.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/subsystems/feed-selection-and-replay.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/subsystems/http-fetching.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/subsystems/index.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/subsystems/repo-governance-context-system.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/subsystems/request-entry-and-composition.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/subsystems/rss-item-and-rendering-contract.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/subsystems/runtime-and-logging.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/subsystems/test-support-and-fixtures.json",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/testing-style.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "spec/tooling-and-quality.md",
+            "type": "text",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "src/Application/ApplicationFactory.php",
+            "type": "code",
+            "owners": [
+                "request-entry-and-composition"
+            ],
+            "imports": [
+                "src/Application/PodquiltApplication.php",
+                "src/Config/ConfigLoader.php",
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Feed/PodquiltService.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "src/Feed/RssRenderer.php",
+                "src/Http/SymfonyFeedFetcher.php",
+                "src/Logging/LoggerFactory.php",
+                "src/Runtime/SystemClock.php",
+                "src/Runtime/UriFactory.php"
+            ],
+            "dependents": [
+                "index.php"
+            ]
+        },
+        {
+            "path": "src/Application/PodquiltApplication.php",
+            "type": "code",
+            "owners": [
+                "request-entry-and-composition"
+            ],
+            "imports": [
+                "src/Config/ConfigLoader.php",
+                "src/Feed/PodquiltService.php",
+                "src/Logging/LogLevel.php",
+                "src/Logging/LoggerFactory.php",
+                "src/Runtime/RequestContext.php"
+            ],
+            "dependents": [
+                "src/Application/ApplicationFactory.php"
+            ]
+        },
+        {
+            "path": "src/Config/AppConfig.php",
+            "type": "code",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [
+                "src/Config/ChannelConfig.php",
+                "src/Config/HttpConfig.php",
+                "src/Config/LogConfig.php"
+            ],
+            "dependents": [
+                "src/Config/ConfigLoader.php",
+                "src/Feed/PodquiltService.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php"
+            ]
+        },
+        {
+            "path": "src/Config/ChannelConfig.php",
+            "type": "code",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Config/AppConfig.php",
+                "src/Config/ConfigLoader.php",
+                "src/Feed/RssRenderer.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php",
+                "tests/RssRendererTest.php"
+            ]
+        },
+        {
+            "path": "src/Config/ConfigException.php",
+            "type": "code",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Config/ConfigLoader.php",
+                "tests/ConfigLoaderTest.php"
+            ]
+        },
+        {
+            "path": "src/Config/ConfigLoader.php",
+            "type": "code",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [
+                "src/Config/AppConfig.php",
+                "src/Config/ChannelConfig.php",
+                "src/Config/ConfigException.php",
+                "src/Config/FeedSourceConfig.php",
+                "src/Config/FileSourceConfig.php",
+                "src/Config/HttpConfig.php",
+                "src/Config/LogConfig.php",
+                "src/Config/ReplayConfig.php",
+                "src/Logging/LogLevel.php",
+                "src/Runtime/RequestContext.php"
+            ],
+            "dependents": [
+                "src/Application/ApplicationFactory.php",
+                "src/Application/PodquiltApplication.php",
+                "tests/ConfigLoaderTest.php"
+            ]
+        },
+        {
+            "path": "src/Config/FeedSourceConfig.php",
+            "type": "code",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [
+                "src/Config/ReplayConfig.php",
+                "src/Config/SourceDefaults.php"
+            ],
+            "dependents": [
+                "src/Config/ConfigLoader.php",
+                "src/Feed/PreparedRemoteFeed.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php",
+                "tests/RemoteFeedSourceProcessorTest.php"
+            ]
+        },
+        {
+            "path": "src/Config/FileSourceConfig.php",
+            "type": "code",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Config/ConfigLoader.php",
+                "src/Feed/FileFeedSourceProcessor.php",
+                "tests/FileFeedSourceProcessorTest.php",
+                "tests/PodquiltServiceGoldenTest.php"
+            ]
+        },
+        {
+            "path": "src/Config/HttpConfig.php",
+            "type": "code",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Config/AppConfig.php",
+                "src/Config/ConfigLoader.php",
+                "tests/ConfigLoaderTest.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php"
+            ]
+        },
+        {
+            "path": "src/Config/LogConfig.php",
+            "type": "code",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [
+                "src/Logging/LogLevel.php"
+            ],
+            "dependents": [
+                "src/Config/AppConfig.php",
+                "src/Config/ConfigLoader.php",
+                "src/Logging/FileLogger.php",
+                "src/Logging/LoggerFactory.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php"
+            ]
+        },
+        {
+            "path": "src/Config/ReplayConfig.php",
+            "type": "code",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Config/ConfigLoader.php",
+                "src/Config/FeedSourceConfig.php",
+                "tests/RemoteFeedSourceProcessorTest.php"
+            ]
+        },
+        {
+            "path": "src/Config/SourceDefaults.php",
+            "type": "code",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Config/FeedSourceConfig.php",
+                "src/Feed/FileFeedSourceProcessor.php"
+            ]
+        },
+        {
+            "path": "src/Feed/FeedItem.php",
+            "type": "code",
+            "owners": [
+                "rss-item-and-rendering-contract"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Feed/ItemSelectionResult.php",
+                "src/Feed/PodquiltService.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "tests/FeedItemTest.php",
+                "tests/RssRendererTest.php"
+            ]
+        },
+        {
+            "path": "src/Feed/FileFeedSourceProcessor.php",
+            "type": "code",
+            "owners": [
+                "feed-selection-and-replay"
+            ],
+            "imports": [
+                "src/Config/FileSourceConfig.php",
+                "src/Config/SourceDefaults.php",
+                "src/Feed/FeedItem.php",
+                "src/Feed/PublicationWindow.php",
+                "src/Logging/LogLevel.php",
+                "src/Logging/LoggerInterface.php",
+                "src/Runtime/ClockInterface.php",
+                "src/Runtime/UriFactory.php"
+            ],
+            "dependents": [
+                "src/Application/ApplicationFactory.php",
+                "src/Feed/PodquiltService.php",
+                "tests/FileFeedSourceProcessorTest.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php"
+            ]
+        },
+        {
+            "path": "src/Feed/ItemSelectionOutcome.php",
+            "type": "code",
+            "owners": [
+                "feed-selection-and-replay"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Feed/ItemSelectionResult.php",
+                "src/Feed/RemoteFeedSourceProcessor.php"
+            ]
+        },
+        {
+            "path": "src/Feed/ItemSelectionResult.php",
+            "type": "code",
+            "owners": [
+                "feed-selection-and-replay"
+            ],
+            "imports": [
+                "src/Feed/FeedItem.php",
+                "src/Feed/ItemSelectionOutcome.php"
+            ],
+            "dependents": [
+                "src/Feed/RemoteFeedSourceProcessor.php"
+            ]
+        },
+        {
+            "path": "src/Feed/PodquiltService.php",
+            "type": "code",
+            "owners": [
+                "feed-orchestration"
+            ],
+            "imports": [
+                "src/Config/AppConfig.php",
+                "src/Feed/FeedItem.php",
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "src/Feed/RssRenderer.php",
+                "src/Http/FeedFetcherInterface.php",
+                "src/Logging/LoggerInterface.php",
+                "src/Runtime/RequestContext.php"
+            ],
+            "dependents": [
+                "src/Application/ApplicationFactory.php",
+                "src/Application/PodquiltApplication.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php"
+            ]
+        },
+        {
+            "path": "src/Feed/PreparedRemoteFeed.php",
+            "type": "code",
+            "owners": [
+                "feed-selection-and-replay"
+            ],
+            "imports": [
+                "src/Config/FeedSourceConfig.php",
+                "src/Http/FeedFetchRequest.php",
+                "src/Http/FetchResult.php",
+                "src/Logging/BufferedLogger.php",
+                "src/Logging/LoggerInterface.php"
+            ],
+            "dependents": [
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "tests/RemoteFeedSourceProcessorTest.php"
+            ]
+        },
+        {
+            "path": "src/Feed/PublicationWindow.php",
+            "type": "code",
+            "owners": [
+                "feed-selection-and-replay"
+            ],
+            "imports": [
+                "src/Runtime/ClockInterface.php"
+            ],
+            "dependents": [
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Feed/RemoteFeedSourceProcessor.php"
+            ]
+        },
+        {
+            "path": "src/Feed/RemoteFeedSourceProcessor.php",
+            "type": "code",
+            "owners": [
+                "feed-selection-and-replay"
+            ],
+            "imports": [
+                "src/Config/FeedSourceConfig.php",
+                "src/Feed/FeedItem.php",
+                "src/Feed/ItemSelectionOutcome.php",
+                "src/Feed/ItemSelectionResult.php",
+                "src/Feed/PreparedRemoteFeed.php",
+                "src/Feed/PublicationWindow.php",
+                "src/Feed/ReplayPlan.php",
+                "src/Http/FeedFetchRequest.php",
+                "src/Http/FetchResult.php",
+                "src/Logging/BufferedLogger.php",
+                "src/Logging/LogLevel.php",
+                "src/Logging/LoggerInterface.php",
+                "src/Runtime/ClockInterface.php",
+                "src/Runtime/RequestContext.php",
+                "src/Runtime/UriFactory.php"
+            ],
+            "dependents": [
+                "src/Application/ApplicationFactory.php",
+                "src/Feed/PodquiltService.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php",
+                "tests/RemoteFeedSourceProcessorTest.php"
+            ]
+        },
+        {
+            "path": "src/Feed/ReplayPlan.php",
+            "type": "code",
+            "owners": [
+                "feed-selection-and-replay"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Feed/RemoteFeedSourceProcessor.php"
+            ]
+        },
+        {
+            "path": "src/Feed/RssRenderer.php",
+            "type": "code",
+            "owners": [
+                "rss-item-and-rendering-contract"
+            ],
+            "imports": [
+                "src/Config/ChannelConfig.php"
+            ],
+            "dependents": [
+                "src/Application/ApplicationFactory.php",
+                "src/Feed/PodquiltService.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php",
+                "tests/RssRendererTest.php"
+            ]
+        },
+        {
+            "path": "src/Http/FeedFetchRequest.php",
+            "type": "code",
+            "owners": [
+                "http-fetching"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Feed/PreparedRemoteFeed.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "src/Http/SymfonyFeedFetcher.php",
+                "tests/SymfonyFeedFetcherTest.php"
+            ]
+        },
+        {
+            "path": "src/Http/FeedFetcherInterface.php",
+            "type": "code",
+            "owners": [
+                "http-fetching"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Feed/PodquiltService.php",
+                "src/Http/SymfonyFeedFetcher.php",
+                "tests/Support/FixtureFeedFetcher.php"
+            ]
+        },
+        {
+            "path": "src/Http/FetchResult.php",
+            "type": "code",
+            "owners": [
+                "http-fetching"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Feed/PreparedRemoteFeed.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "src/Http/SymfonyFeedFetcher.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php",
+                "tests/RemoteFeedSourceProcessorTest.php",
+                "tests/Support/FixtureFeedFetcher.php"
+            ]
+        },
+        {
+            "path": "src/Http/SymfonyFeedFetcher.php",
+            "type": "code",
+            "owners": [
+                "http-fetching"
+            ],
+            "imports": [
+                "src/Http/FeedFetchRequest.php",
+                "src/Http/FeedFetcherInterface.php",
+                "src/Http/FetchResult.php"
+            ],
+            "dependents": [
+                "src/Application/ApplicationFactory.php",
+                "tests/SymfonyFeedFetcherTest.php"
+            ]
+        },
+        {
+            "path": "src/Logging/BufferedLogger.php",
+            "type": "code",
+            "owners": [
+                "runtime-and-logging"
+            ],
+            "imports": [
+                "src/Logging/LogLevel.php",
+                "src/Logging/LoggerInterface.php"
+            ],
+            "dependents": [
+                "src/Feed/PreparedRemoteFeed.php",
+                "src/Feed/RemoteFeedSourceProcessor.php"
+            ]
+        },
+        {
+            "path": "src/Logging/FileLogger.php",
+            "type": "code",
+            "owners": [
+                "runtime-and-logging"
+            ],
+            "imports": [
+                "src/Config/LogConfig.php",
+                "src/Logging/LogLevel.php",
+                "src/Logging/LoggerInterface.php"
+            ],
+            "dependents": [
+                "src/Logging/LoggerFactory.php"
+            ]
+        },
+        {
+            "path": "src/Logging/LogLevel.php",
+            "type": "code",
+            "owners": [
+                "runtime-and-logging"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Application/PodquiltApplication.php",
+                "src/Config/ConfigLoader.php",
+                "src/Config/LogConfig.php",
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "src/Logging/BufferedLogger.php",
+                "src/Logging/FileLogger.php",
+                "src/Logging/LoggerInterface.php",
+                "tests/ConfigLoaderTest.php",
+                "tests/PodquiltServiceTest.php",
+                "tests/RemoteFeedSourceProcessorTest.php",
+                "tests/Support/BufferedLogger.php"
+            ]
+        },
+        {
+            "path": "src/Logging/LoggerFactory.php",
+            "type": "code",
+            "owners": [
+                "runtime-and-logging"
+            ],
+            "imports": [
+                "src/Config/LogConfig.php",
+                "src/Logging/FileLogger.php",
+                "src/Logging/LoggerInterface.php"
+            ],
+            "dependents": [
+                "src/Application/ApplicationFactory.php",
+                "src/Application/PodquiltApplication.php"
+            ]
+        },
+        {
+            "path": "src/Logging/LoggerInterface.php",
+            "type": "code",
+            "owners": [
+                "runtime-and-logging"
+            ],
+            "imports": [
+                "src/Logging/LogLevel.php"
+            ],
+            "dependents": [
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Feed/PodquiltService.php",
+                "src/Feed/PreparedRemoteFeed.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "src/Logging/BufferedLogger.php",
+                "src/Logging/FileLogger.php",
+                "src/Logging/LoggerFactory.php",
+                "tests/Support/BufferedLogger.php"
+            ]
+        },
+        {
+            "path": "src/Runtime/ClockInterface.php",
+            "type": "code",
+            "owners": [
+                "runtime-and-logging"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Feed/PublicationWindow.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "src/Runtime/SystemClock.php",
+                "tests/Support/FrozenClock.php"
+            ]
+        },
+        {
+            "path": "src/Runtime/RequestContext.php",
+            "type": "code",
+            "owners": [
+                "runtime-and-logging"
+            ],
+            "imports": [],
+            "dependents": [
+                "index.php",
+                "src/Application/PodquiltApplication.php",
+                "src/Config/ConfigLoader.php",
+                "src/Feed/PodquiltService.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "tests/ConfigLoaderTest.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php",
+                "tests/RemoteFeedSourceProcessorTest.php"
+            ]
+        },
+        {
+            "path": "src/Runtime/SystemClock.php",
+            "type": "code",
+            "owners": [
+                "runtime-and-logging"
+            ],
+            "imports": [
+                "src/Runtime/ClockInterface.php"
+            ],
+            "dependents": [
+                "src/Application/ApplicationFactory.php"
+            ]
+        },
+        {
+            "path": "src/Runtime/UriFactory.php",
+            "type": "code",
+            "owners": [
+                "runtime-and-logging"
+            ],
+            "imports": [],
+            "dependents": [
+                "src/Application/ApplicationFactory.php",
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "tests/FileFeedSourceProcessorTest.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php",
+                "tests/RemoteFeedSourceProcessorTest.php"
+            ]
+        },
+        {
+            "path": "tests/ConfigLoaderTest.php",
+            "type": "code",
+            "owners": [
+                "config-contract-and-normalization"
+            ],
+            "imports": [
+                "src/Config/ConfigException.php",
+                "src/Config/ConfigLoader.php",
+                "src/Config/HttpConfig.php",
+                "src/Logging/LogLevel.php",
+                "src/Runtime/RequestContext.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tests/ContextSystemTest.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [
+                "tools/context-system/src/ContextSystem.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tests/FeedItemTest.php",
+            "type": "code",
+            "owners": [
+                "rss-item-and-rendering-contract"
+            ],
+            "imports": [
+                "src/Feed/FeedItem.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tests/FileFeedSourceProcessorTest.php",
+            "type": "code",
+            "owners": [
+                "feed-selection-and-replay"
+            ],
+            "imports": [
+                "src/Config/FileSourceConfig.php",
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Runtime/UriFactory.php",
+                "tests/Support/BufferedLogger.php",
+                "tests/Support/FrozenClock.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tests/Fixtures/expected/aggregated-feed.xml",
+            "type": "text",
+            "owners": [
+                "test-support-and-fixtures"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "tests/Fixtures/feeds/prepend-itunes.xml",
+            "type": "text",
+            "owners": [
+                "test-support-and-fixtures"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "tests/Fixtures/feeds/primary.xml",
+            "type": "text",
+            "owners": [
+                "test-support-and-fixtures"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "tests/Fixtures/feeds/replay.xml",
+            "type": "text",
+            "owners": [
+                "test-support-and-fixtures"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "tests/Fixtures/feeds/secondary.xml",
+            "type": "text",
+            "owners": [
+                "test-support-and-fixtures"
+            ],
+            "imports": [],
+            "dependents": []
+        },
+        {
+            "path": "tests/PodquiltServiceGoldenTest.php",
+            "type": "code",
+            "owners": [
+                "rss-item-and-rendering-contract"
+            ],
+            "imports": [
+                "src/Config/AppConfig.php",
+                "src/Config/ChannelConfig.php",
+                "src/Config/FeedSourceConfig.php",
+                "src/Config/FileSourceConfig.php",
+                "src/Config/HttpConfig.php",
+                "src/Config/LogConfig.php",
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Feed/PodquiltService.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "src/Feed/RssRenderer.php",
+                "src/Http/FetchResult.php",
+                "src/Runtime/RequestContext.php",
+                "src/Runtime/UriFactory.php",
+                "tests/Support/BufferedLogger.php",
+                "tests/Support/FixtureFeedFetcher.php",
+                "tests/Support/FixturePath.php",
+                "tests/Support/FrozenClock.php",
+                "tests/Support/StringDiffAssert.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tests/PodquiltServiceTest.php",
+            "type": "code",
+            "owners": [
+                "feed-orchestration"
+            ],
+            "imports": [
+                "src/Config/AppConfig.php",
+                "src/Config/ChannelConfig.php",
+                "src/Config/FeedSourceConfig.php",
+                "src/Config/HttpConfig.php",
+                "src/Config/LogConfig.php",
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Feed/PodquiltService.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "src/Feed/RssRenderer.php",
+                "src/Http/FetchResult.php",
+                "src/Logging/LogLevel.php",
+                "src/Runtime/RequestContext.php",
+                "src/Runtime/UriFactory.php",
+                "tests/Support/BufferedLogger.php",
+                "tests/Support/FixtureFeedFetcher.php",
+                "tests/Support/FixturePath.php",
+                "tests/Support/FrozenClock.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tests/RemoteFeedSourceProcessorTest.php",
+            "type": "code",
+            "owners": [
+                "feed-selection-and-replay"
+            ],
+            "imports": [
+                "src/Config/FeedSourceConfig.php",
+                "src/Config/ReplayConfig.php",
+                "src/Feed/PreparedRemoteFeed.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "src/Http/FetchResult.php",
+                "src/Logging/LogLevel.php",
+                "src/Runtime/RequestContext.php",
+                "src/Runtime/UriFactory.php",
+                "tests/Support/BufferedLogger.php",
+                "tests/Support/FixturePath.php",
+                "tests/Support/FrozenClock.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tests/RssRendererTest.php",
+            "type": "code",
+            "owners": [
+                "rss-item-and-rendering-contract"
+            ],
+            "imports": [
+                "src/Config/ChannelConfig.php",
+                "src/Feed/FeedItem.php",
+                "src/Feed/RssRenderer.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tests/Support/BufferedLogger.php",
+            "type": "code",
+            "owners": [
+                "test-support-and-fixtures"
+            ],
+            "imports": [
+                "src/Logging/LogLevel.php",
+                "src/Logging/LoggerInterface.php"
+            ],
+            "dependents": [
+                "tests/FileFeedSourceProcessorTest.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php",
+                "tests/RemoteFeedSourceProcessorTest.php"
+            ]
+        },
+        {
+            "path": "tests/Support/FixtureFeedFetcher.php",
+            "type": "code",
+            "owners": [
+                "test-support-and-fixtures"
+            ],
+            "imports": [
+                "src/Http/FeedFetcherInterface.php",
+                "src/Http/FetchResult.php"
+            ],
+            "dependents": [
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php"
+            ]
+        },
+        {
+            "path": "tests/Support/FixturePath.php",
+            "type": "code",
+            "owners": [
+                "test-support-and-fixtures"
+            ],
+            "imports": [],
+            "dependents": [
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php",
+                "tests/RemoteFeedSourceProcessorTest.php"
+            ]
+        },
+        {
+            "path": "tests/Support/FrozenClock.php",
+            "type": "code",
+            "owners": [
+                "test-support-and-fixtures"
+            ],
+            "imports": [
+                "src/Runtime/ClockInterface.php"
+            ],
+            "dependents": [
+                "tests/FileFeedSourceProcessorTest.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/PodquiltServiceTest.php",
+                "tests/RemoteFeedSourceProcessorTest.php"
+            ]
+        },
+        {
+            "path": "tests/Support/StringDiffAssert.php",
+            "type": "code",
+            "owners": [
+                "test-support-and-fixtures"
+            ],
+            "imports": [],
+            "dependents": [
+                "tests/PodquiltServiceGoldenTest.php"
+            ]
+        },
+        {
+            "path": "tests/SymfonyFeedFetcherTest.php",
+            "type": "code",
+            "owners": [
+                "http-fetching"
+            ],
+            "imports": [
+                "src/Http/FeedFetchRequest.php",
+                "src/Http/SymfonyFeedFetcher.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tools/context-system/bin/architecture.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [
+                "tools/context-system/src/ContextSystem.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tools/context-system/bin/build.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [
+                "tools/context-system/src/ContextSystem.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tools/context-system/bin/check.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [
+                "tools/context-system/src/ContextSystem.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tools/context-system/bin/comments.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [
+                "tools/context-system/src/ContextSystem.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tools/context-system/bin/review.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [
+                "tools/context-system/src/ContextSystem.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tools/context-system/bin/task.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [
+                "tools/context-system/src/ContextSystem.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tools/context-system/bin/terms.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [
+                "tools/context-system/src/ContextSystem.php"
+            ],
+            "dependents": []
+        },
+        {
+            "path": "tools/context-system/src/ContextData.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": [
+                "tools/context-system/src/ContextSystem.php"
+            ]
+        },
+        {
+            "path": "tools/context-system/src/ContextSystem.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [
+                "tools/context-system/src/ContextData.php",
+                "tools/context-system/src/PathMatcher.php",
+                "tools/context-system/src/PhpDependencyScanner.php"
+            ],
+            "dependents": [
+                "tests/ContextSystemTest.php",
+                "tools/context-system/bin/architecture.php",
+                "tools/context-system/bin/build.php",
+                "tools/context-system/bin/check.php",
+                "tools/context-system/bin/comments.php",
+                "tools/context-system/bin/review.php",
+                "tools/context-system/bin/task.php",
+                "tools/context-system/bin/terms.php"
+            ]
+        },
+        {
+            "path": "tools/context-system/src/PathMatcher.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": [
+                "tools/context-system/src/ContextSystem.php"
+            ]
+        },
+        {
+            "path": "tools/context-system/src/PhpDependencyScanner.php",
+            "type": "code",
+            "owners": [
+                "repo-governance-context-system"
+            ],
+            "imports": [],
+            "dependents": [
+                "tools/context-system/src/ContextSystem.php"
+            ]
+        }
+    ],
+    "subsystems": [
+        {
+            "id": "config-contract-and-normalization",
+            "status": "locked",
+            "owned_paths": [
+                "config.json.example",
+                "src/Config/**",
+                "tests/ConfigLoaderTest.php"
+            ],
+            "related_paths": [
+                "README.md"
+            ],
+            "depends_on": [
+                "runtime-and-logging"
+            ],
+            "used_by": [
+                "request-entry-and-composition",
+                "feed-selection-and-replay",
+                "feed-orchestration",
+                "rss-item-and-rendering-contract"
+            ]
+        },
+        {
+            "id": "feed-orchestration",
+            "status": "stable",
+            "owned_paths": [
+                "src/Feed/PodquiltService.php",
+                "tests/PodquiltServiceTest.php"
+            ],
+            "related_paths": [
+                "tests/PodquiltServiceGoldenTest.php"
+            ],
+            "depends_on": [
+                "config-contract-and-normalization",
+                "feed-selection-and-replay",
+                "rss-item-and-rendering-contract",
+                "http-fetching",
+                "runtime-and-logging",
+                "test-support-and-fixtures"
+            ],
+            "used_by": [
+                "request-entry-and-composition"
+            ]
+        },
+        {
+            "id": "feed-selection-and-replay",
+            "status": "locked",
+            "owned_paths": [
+                "src/Feed/FileFeedSourceProcessor.php",
+                "src/Feed/ItemSelectionOutcome.php",
+                "src/Feed/ItemSelectionResult.php",
+                "src/Feed/PreparedRemoteFeed.php",
+                "src/Feed/PublicationWindow.php",
+                "src/Feed/RemoteFeedSourceProcessor.php",
+                "src/Feed/ReplayPlan.php",
+                "tests/FileFeedSourceProcessorTest.php",
+                "tests/RemoteFeedSourceProcessorTest.php"
+            ],
+            "related_paths": [
+                "tests/Fixtures/feeds/**"
+            ],
+            "depends_on": [
+                "config-contract-and-normalization",
+                "http-fetching",
+                "runtime-and-logging",
+                "test-support-and-fixtures"
+            ],
+            "used_by": [
+                "feed-orchestration",
+                "repo-governance-context-system"
+            ]
+        },
+        {
+            "id": "http-fetching",
+            "status": "stable",
+            "owned_paths": [
+                "src/Http/**",
+                "tests/SymfonyFeedFetcherTest.php"
+            ],
+            "related_paths": [
+                "tests/Support/FixtureFeedFetcher.php"
+            ],
+            "depends_on": [],
+            "used_by": [
+                "feed-selection-and-replay",
+                "feed-orchestration",
+                "test-support-and-fixtures"
+            ]
+        },
+        {
+            "id": "repo-governance-context-system",
+            "status": "stable",
+            "owned_paths": [
+                ".dockerignore",
+                ".github/**",
+                ".gitignore",
+                ".htaccess",
+                ".php-cs-fixer.dist.php",
+                "AGENTS.md",
+                "Dockerfile",
+                "LICENSE",
+                "README.md",
+                "compose.yaml",
+                "composer.json",
+                "composer.lock",
+                "docs/**",
+                "glossary/**",
+                "phpstan.neon",
+                "phpunit.xml",
+                "spec/**",
+                "tests/ContextSystemTest.php",
+                "tools/context-system/**"
+            ],
+            "related_paths": [],
+            "depends_on": [],
+            "used_by": []
+        },
+        {
+            "id": "request-entry-and-composition",
+            "status": "stable",
+            "owned_paths": [
+                "index.php",
+                "src/Application/**"
+            ],
+            "related_paths": [
+                "src/Runtime/RequestContext.php",
+                "src/Feed/PodquiltService.php"
+            ],
+            "depends_on": [
+                "config-contract-and-normalization",
+                "feed-orchestration",
+                "runtime-and-logging"
+            ],
+            "used_by": [
+                "repo-governance-context-system"
+            ]
+        },
+        {
+            "id": "rss-item-and-rendering-contract",
+            "status": "locked",
+            "owned_paths": [
+                "src/Feed/FeedItem.php",
+                "src/Feed/RssRenderer.php",
+                "tests/FeedItemTest.php",
+                "tests/PodquiltServiceGoldenTest.php",
+                "tests/RssRendererTest.php"
+            ],
+            "related_paths": [
+                "tests/Fixtures/expected/**"
+            ],
+            "depends_on": [
+                "config-contract-and-normalization",
+                "test-support-and-fixtures"
+            ],
+            "used_by": [
+                "feed-orchestration",
+                "repo-governance-context-system"
+            ]
+        },
+        {
+            "id": "runtime-and-logging",
+            "status": "stable",
+            "owned_paths": [
+                "src/Logging/**",
+                "src/Runtime/**"
+            ],
+            "related_paths": [
+                "tests/Support/BufferedLogger.php",
+                "tests/Support/FrozenClock.php"
+            ],
+            "depends_on": [
+                "config-contract-and-normalization"
+            ],
+            "used_by": [
+                "request-entry-and-composition",
+                "feed-selection-and-replay",
+                "feed-orchestration",
+                "test-support-and-fixtures"
+            ]
+        },
+        {
+            "id": "test-support-and-fixtures",
+            "status": "stable",
+            "owned_paths": [
+                "tests/Fixtures/**",
+                "tests/Support/**"
+            ],
+            "related_paths": [
+                "tests/*.php"
+            ],
+            "depends_on": [
+                "http-fetching",
+                "runtime-and-logging"
+            ],
+            "used_by": [
+                "feed-selection-and-replay",
+                "rss-item-and-rendering-contract",
+                "feed-orchestration",
+                "repo-governance-context-system"
+            ]
+        }
+    ]
+}

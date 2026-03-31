@@ -1,0 +1,137 @@
+{
+    "version": 1,
+    "status_vocabulary": {
+        "locked": "Behavior and contract-sensitive architecture. Changes require an active task allow-list entry and an ADR update in the same change.",
+        "stable": "Mature subsystem with explicit invariants. Changes still require subsystem record updates when owned code changes.",
+        "evolving": "Subsystem with active iteration. Behavior may expand, but the subsystem record remains authoritative for boundaries and dependencies."
+    },
+    "source_roots": [
+        ".dockerignore",
+        ".github",
+        ".gitignore",
+        ".htaccess",
+        "AGENTS.md",
+        "Dockerfile",
+        "LICENSE",
+        "README.md",
+        "compose.yaml",
+        "composer.json",
+        "composer.lock",
+        "config.json.example",
+        "docs",
+        "glossary",
+        "index.php",
+        "models",
+        "phpstan.neon",
+        "phpunit.xml",
+        "spec",
+        "src",
+        "tests",
+        "tools",
+        ".php-cs-fixer.dist.php"
+    ],
+    "generated_roots": [
+        "spec/generated"
+    ],
+    "allowed_local_outputs": [
+        ".agent-context"
+    ],
+    "exempt_paths": [
+        "config.json",
+        "glossary/README.md"
+    ],
+    "architecture_rules": [
+        {
+            "id": "arch-001",
+            "from": [
+                "index.php"
+            ],
+            "forbidden": [
+                "src/**"
+            ],
+            "allowed": [
+                "src/Application/**",
+                "src/Runtime/RequestContext.php"
+            ],
+            "exceptions": [],
+            "message": "The front controller stays thin and delegates composition to the application layer."
+        },
+        {
+            "id": "arch-002",
+            "from": [
+                "src/Feed/**"
+            ],
+            "forbidden": [
+                "src/Application/**"
+            ],
+            "allowed": [],
+            "exceptions": [],
+            "message": "Feed code stays below the application composition layer."
+        },
+        {
+            "id": "arch-003",
+            "from": [
+                "src/Http/**"
+            ],
+            "forbidden": [
+                "src/Application/**",
+                "src/Feed/**"
+            ],
+            "allowed": [
+                "src/Http/**"
+            ],
+            "exceptions": [],
+            "message": "HTTP transport code should not depend on application or feed-processing internals."
+        },
+        {
+            "id": "arch-004",
+            "from": [
+                "src/Config/**"
+            ],
+            "forbidden": [
+                "src/**"
+            ],
+            "allowed": [
+                "src/Config/**",
+                "src/Runtime/RequestContext.php",
+                "src/Logging/LogLevel.php"
+            ],
+            "exceptions": [],
+            "message": "Config loading stays isolated from the rest of the runtime except for explicit request-context and log-level seams."
+        },
+        {
+            "id": "arch-005",
+            "from": [
+                "src/Runtime/**"
+            ],
+            "forbidden": [
+                "src/**"
+            ],
+            "allowed": [
+                "src/Runtime/**"
+            ],
+            "exceptions": [],
+            "message": "Runtime seams stay leaf-level and free from higher-level application concerns."
+        },
+        {
+            "id": "arch-006",
+            "from": [
+                "src/Logging/**"
+            ],
+            "forbidden": [
+                "src/Application/**",
+                "src/Feed/**",
+                "src/Http/**"
+            ],
+            "allowed": [
+                "src/Config/LogConfig.php",
+                "src/Logging/**"
+            ],
+            "exceptions": [],
+            "message": "Logging stays below application, feed, and HTTP behavior."
+        }
+    ],
+    "task_state_path": ".agent-context/active-task.json",
+    "task_markdown_path": ".agent-context/active-task.md",
+    "review_packet_path": ".agent-context/drift-review.md"
+}
