@@ -10,6 +10,7 @@ use Podquilt\Config\AppConfig;
 use Podquilt\Config\ChannelConfig;
 use Podquilt\Config\FeedSourceConfig;
 use Podquilt\Config\FileSourceConfig;
+use Podquilt\Config\HttpConfig;
 use Podquilt\Config\LogConfig;
 use Podquilt\Feed\FileFeedSourceProcessor;
 use Podquilt\Feed\PodquiltService;
@@ -22,28 +23,30 @@ use Podquilt\Tests\Support\BufferedLogger;
 use Podquilt\Tests\Support\FixtureFeedFetcher;
 use Podquilt\Tests\Support\FixturePath;
 use Podquilt\Tests\Support\FrozenClock;
+use Podquilt\Tests\Support\StringDiffAssert;
 
 final class PodquiltServiceGoldenTest extends TestCase
 {
     public function testRenderedFeedMatchesGoldenSnapshot(): void
     {
         $clock = new FrozenClock(new DateTimeImmutable('2024-04-01T12:00:00+00:00'));
+        $feedFetcher = new FixtureFeedFetcher([
+            'https://example.test/primary.xml' => new FetchResult(
+                200,
+                (string) file_get_contents(FixturePath::for('feeds/primary.xml')),
+            ),
+            'https://example.test/secondary.xml' => new FetchResult(
+                200,
+                (string) file_get_contents(FixturePath::for('feeds/secondary.xml')),
+            ),
+        ]);
         $service = new PodquiltService(
             new RemoteFeedSourceProcessor(
                 $clock,
                 new UriFactory(),
-                new FixtureFeedFetcher([
-                    'https://example.test/primary.xml' => new FetchResult(
-                        200,
-                        (string) file_get_contents(FixturePath::for('feeds/primary.xml')),
-                    ),
-                    'https://example.test/secondary.xml' => new FetchResult(
-                        200,
-                        (string) file_get_contents(FixturePath::for('feeds/secondary.xml')),
-                    ),
-                ]),
             ),
             new FileFeedSourceProcessor($clock, new UriFactory()),
+            $feedFetcher,
             new RssRenderer(),
         );
 
@@ -83,6 +86,7 @@ final class PodquiltServiceGoldenTest extends TestCase
                 ),
             ],
             logs: LogConfig::defaults(),
+            http: HttpConfig::defaults(),
         );
 
         $xml = $service->render(
@@ -91,7 +95,7 @@ final class PodquiltServiceGoldenTest extends TestCase
             new BufferedLogger(),
         );
 
-        self::assertSame(
+        StringDiffAssert::assertSame(
             (string) file_get_contents(FixturePath::for('expected/aggregated-feed.xml')),
             $xml,
         );

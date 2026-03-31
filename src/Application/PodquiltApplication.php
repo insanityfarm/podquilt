@@ -37,6 +37,10 @@ final readonly class PodquiltApplication
             ),
         );
 
+        foreach ($config->warnings as $warning) {
+            $logger->log(LogLevel::Warning, $warning);
+        }
+
         $xml = $this->service->render($config, $requestContext, $logger);
 
         $logger->log(

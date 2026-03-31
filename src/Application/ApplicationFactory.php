@@ -24,7 +24,7 @@ final readonly class ApplicationFactory
         $clock = new SystemClock();
         $uriFactory = new UriFactory();
         $feedFetcher = SymfonyFeedFetcher::createDefault();
-        $remoteProcessor = new RemoteFeedSourceProcessor($clock, $uriFactory, $feedFetcher);
+        $remoteProcessor = new RemoteFeedSourceProcessor($clock, $uriFactory);
         $fileProcessor = new FileFeedSourceProcessor($clock, $uriFactory);
 
         return new PodquiltApplication(
@@ -33,6 +33,7 @@ final readonly class ApplicationFactory
             service: new PodquiltService(
                 remoteProcessor: $remoteProcessor,
                 fileProcessor: $fileProcessor,
+                feedFetcher: $feedFetcher,
                 renderer: new RssRenderer(),
             ),
             projectRoot: $projectRoot,

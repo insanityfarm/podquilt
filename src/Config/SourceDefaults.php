@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Podquilt\Config;
 
 /**
- * Houses the historical Podquilt defaults that still shape feed selection behavior.
+ * Defines the default feed selection limits used by Podquilt.
  */
 final class SourceDefaults
 {

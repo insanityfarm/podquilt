@@ -7,6 +7,7 @@ namespace Podquilt\Tests;
 use PHPUnit\Framework\TestCase;
 use Podquilt\Config\ConfigException;
 use Podquilt\Config\ConfigLoader;
+use Podquilt\Config\HttpConfig;
 use Podquilt\Logging\LogLevel;
 use Podquilt\Runtime\RequestContext;
 
@@ -34,6 +35,30 @@ final class ConfigLoaderTest extends TestCase
         self::assertTrue($config->logs->enabled);
         self::assertSame(LogLevel::Info, $config->logs->level);
         self::assertSame('logs/podquilt.log', $config->logs->path);
+        self::assertSame(HttpConfig::DEFAULT_MAX_CONCURRENT_REQUESTS, $config->http->maxConcurrentRequests);
+        self::assertSame([], $config->warnings);
+    }
+
+    public function testFallsBackToDefaultConcurrentRequestLimitAndRecordsWarning(): void
+    {
+        $path = $this->writeTempConfig([
+            'http' => [
+                'max_concurrent_requests' => 0,
+            ],
+        ]);
+
+        $config = (new ConfigLoader())->load($path, $this->requestContext());
+
+        self::assertSame(HttpConfig::DEFAULT_MAX_CONCURRENT_REQUESTS, $config->http->maxConcurrentRequests);
+        self::assertSame(
+            [
+                sprintf(
+                    'Invalid http.max_concurrent_requests value. Using default of %d.',
+                    HttpConfig::DEFAULT_MAX_CONCURRENT_REQUESTS,
+                ),
+            ],
+            $config->warnings,
+        );
     }
 
     public function testThrowsHelpfulExceptionForMissingConfig(): void

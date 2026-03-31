@@ -11,7 +11,9 @@ use DateTimeZone;
 use DOMDocument;
 use DOMElement;
 use Podquilt\Config\FeedSourceConfig;
-use Podquilt\Http\FeedFetcherInterface;
+use Podquilt\Http\FeedFetchRequest;
+use Podquilt\Http\FetchResult;
+use Podquilt\Logging\BufferedLogger;
 use Podquilt\Logging\LoggerInterface;
 use Podquilt\Logging\LogLevel;
 use Podquilt\Runtime\ClockInterface;
@@ -19,29 +21,29 @@ use Podquilt\Runtime\RequestContext;
 use Podquilt\Runtime\UriFactory;
 
 /**
- * Fetches, parses, filters, and optionally replays items from a remote RSS source.
+ * Validates, parses, filters, and optionally replays items from remote RSS sources.
  */
 final readonly class RemoteFeedSourceProcessor
 {
     public function __construct(
         private ClockInterface $clock,
         private UriFactory $uriFactory,
-        private FeedFetcherInterface $feedFetcher,
     ) {
     }
 
     /**
-     * @return list<FeedItem>
+     * Validates one configured source and builds the request descriptor Podquilt can execute later.
      */
-    public function collectItems(
+    public function prepareFeed(
+        int $configIndex,
         FeedSourceConfig $source,
-        LoggerInterface $logger,
         RequestContext $requestContext,
-    ): array {
+    ): PreparedRemoteFeed {
+        $logger = new BufferedLogger();
         $itemLimit = $source->effectiveItemLimit();
 
         if ($itemLimit <= 0) {
-            return [];
+            return new PreparedRemoteFeed($source, null, $logger);
         }
 
         $uri = $this->uriFactory->parseRemoteFeedUri($source->url);
@@ -49,10 +51,34 @@ final readonly class RemoteFeedSourceProcessor
         if ($uri === null) {
             $logger->log(LogLevel::Warning, 'Invalid URL for feed: ' . $source->url);
 
+            return new PreparedRemoteFeed($source, null, $logger);
+        }
+
+        return new PreparedRemoteFeed(
+            source: $source,
+            request: new FeedFetchRequest(
+                id: sprintf('remote-feed-%d', $configIndex),
+                uri: $uri,
+                userAgent: $requestContext->userAgent,
+            ),
+            logger: $logger,
+        );
+    }
+
+    /**
+     * @return list<FeedItem>
+     */
+    public function collectItemsFromFetchResult(
+        PreparedRemoteFeed $preparedFeed,
+        FetchResult $fetchResult,
+    ): array {
+        if ($preparedFeed->request === null) {
             return [];
         }
 
-        $fetchResult = $this->feedFetcher->fetch($uri, $requestContext->userAgent);
+        $source = $preparedFeed->source;
+        $logger = $preparedFeed->logger();
+        $itemLimit = $source->effectiveItemLimit();
 
         if ($fetchResult->transportError !== null) {
             $logger->log(LogLevel::Warning, 'Request for ' . $source->url . ' failed: ' . $fetchResult->transportError);
@@ -77,6 +103,7 @@ final readonly class RemoteFeedSourceProcessor
         $logger->log(LogLevel::Info, 'Beginning to parse feed: ' . $source->url);
 
         $replayPlan = $this->buildReplayPlan($source, $logger);
+        $publicationWindow = PublicationWindow::fromClock($this->clock, $source->effectiveItemMaxAgeDays());
         $orderedElements = $replayPlan->enabled ? array_reverse($itemElements) : $itemElements;
         $items = [];
         $replayIndex = 0;
@@ -92,7 +119,7 @@ final readonly class RemoteFeedSourceProcessor
                 continue;
             }
 
-            $selection = $this->selectItem($item, $source, $replayPlan, $replayIndex);
+            $selection = $this->selectItem($item, $source, $replayPlan, $publicationWindow, $replayIndex);
 
             if ($selection->outcome === ItemSelectionOutcome::Include && $selection->item !== null) {
                 $items[] = $selection->item;
@@ -111,6 +138,7 @@ final readonly class RemoteFeedSourceProcessor
         FeedItem $item,
         FeedSourceConfig $source,
         ReplayPlan $replayPlan,
+        PublicationWindow $publicationWindow,
         int &$replayIndex,
     ): ItemSelectionResult {
         if ($source->prepend !== null && $source->prepend !== '') {
@@ -148,9 +176,7 @@ final readonly class RemoteFeedSourceProcessor
             }
         }
 
-        $publicationCutoff = $this->now()->modify(sprintf('-%d days', $source->effectiveItemMaxAgeDays()));
-
-        if ($item->publishedAt < $publicationCutoff || $item->publishedAt > $this->now()) {
+        if (!$publicationWindow->includes($item->publishedAt)) {
             return ItemSelectionResult::exclude();
         }
 

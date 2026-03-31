@@ -12,7 +12,6 @@ use Podquilt\Config\SourceDefaults;
 use Podquilt\Logging\LoggerInterface;
 use Podquilt\Logging\LogLevel;
 use Podquilt\Runtime\ClockInterface;
-use Podquilt\Runtime\RequestContext;
 use Podquilt\Runtime\UriFactory;
 
 /**
@@ -32,7 +31,6 @@ final readonly class FileFeedSourceProcessor
     public function collectItems(
         FileSourceConfig $source,
         LoggerInterface $logger,
-        RequestContext $requestContext,
     ): array {
         $uri = $this->uriFactory->parseAbsoluteUri($source->url);
 
@@ -54,9 +52,9 @@ final readonly class FileFeedSourceProcessor
             return [];
         }
 
-        $publicationCutoff = $this->clock->now()->modify(sprintf('-%d days', SourceDefaults::ITEM_MAX_AGE_DAYS));
+        $publicationWindow = PublicationWindow::fromClock($this->clock, SourceDefaults::ITEM_MAX_AGE_DAYS);
 
-        if ($publishedAt <= $publicationCutoff || $publishedAt >= $this->clock->now()) {
+        if (!$publicationWindow->includes($publishedAt)) {
             return [];
         }
 

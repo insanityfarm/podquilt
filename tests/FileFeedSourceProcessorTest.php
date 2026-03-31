@@ -8,7 +8,6 @@ use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Podquilt\Config\FileSourceConfig;
 use Podquilt\Feed\FileFeedSourceProcessor;
-use Podquilt\Runtime\RequestContext;
 use Podquilt\Runtime\UriFactory;
 use Podquilt\Tests\Support\BufferedLogger;
 use Podquilt\Tests\Support\FrozenClock;
@@ -32,12 +31,46 @@ final class FileFeedSourceProcessorTest extends TestCase
                 disabled: null,
             ),
             $logger,
-            new RequestContext('PHPUnit', '127.0.0.1', 'example.test', '/feed', 1000.0),
         );
 
         self::assertCount(1, $items);
         self::assertSame('Local Episode', $items[0]->fieldValue('title'));
         self::assertNotNull($items[0]->fieldValue('guid'));
+    }
+
+    public function testIncludesItemsAtPublicationWindowBoundaries(): void
+    {
+        $processor = new FileFeedSourceProcessor(
+            new FrozenClock(new DateTimeImmutable('2024-04-01T12:00:00+00:00')),
+            new UriFactory(),
+        );
+
+        $logger = new BufferedLogger();
+        $cutoffItems = $processor->collectItems(
+            new FileSourceConfig(
+                url: 'https://example.test/cutoff.mp3',
+                title: 'Cutoff Episode',
+                pubDate: 'Mon, 18 Mar 2024 12:00:00 +0000',
+                description: 'Exactly on the oldest allowed boundary.',
+                disabled: null,
+            ),
+            $logger,
+        );
+        $currentItems = $processor->collectItems(
+            new FileSourceConfig(
+                url: 'https://example.test/current.mp3',
+                title: 'Current Episode',
+                pubDate: 'Mon, 01 Apr 2024 12:00:00 +0000',
+                description: 'Exactly on the newest allowed boundary.',
+                disabled: null,
+            ),
+            $logger,
+        );
+
+        self::assertCount(1, $cutoffItems);
+        self::assertSame('Cutoff Episode', $cutoffItems[0]->fieldValue('title'));
+        self::assertCount(1, $currentItems);
+        self::assertSame('Current Episode', $currentItems[0]->fieldValue('title'));
     }
 
     public function testSkipsFutureAndOldFileItems(): void
@@ -58,7 +91,6 @@ final class FileFeedSourceProcessorTest extends TestCase
                 disabled: null,
             ),
             $logger,
-            new RequestContext('PHPUnit', '127.0.0.1', 'example.test', '/feed', 1000.0),
         ));
 
         self::assertSame([], $processor->collectItems(
@@ -70,7 +102,6 @@ final class FileFeedSourceProcessorTest extends TestCase
                 disabled: null,
             ),
             $logger,
-            new RequestContext('PHPUnit', '127.0.0.1', 'example.test', '/feed', 1000.0),
         ));
     }
 }

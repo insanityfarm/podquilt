@@ -1,48 +1,60 @@
 {
     "feeds": [
         {
-            "url": "https://feeds.wnyc.org/radiolab",
-            "prepend": "Radiolab: ",
-            "item_max_age": 7
+            "url": "https://feeds.npr.org/510318/podcast.xml",
+            "prepend": "Up First: ",
+            "item_max_age": 3
         },
         {
-            "url": "https://www.npr.org/rss/podcast.php?id=344098539",
-            "prepend": "Wait Wait... ",
-            "item_limit": 5,
-            "disabled": "true"
+            "url": "https://feeds.npr.org/510289/podcast.xml",
+            "prepend": "Planet Money: ",
+            "item_limit": 5
         },
         {
             "url": "https://feeds.99percentinvisible.org/99percentinvisible",
+            "prepend": "99% Invisible: ",
             "item_limit": 5,
             "filter": {
-                "itunes:episodeType": "^((?!trailer).)*$"
+                "title": "^((?!Service Request).)*$"
             }
         },
         {
-            "url": "https://example.com/archive-feed.xml",
+            "url": "https://feeds.megaphone.fm/search-engine",
+            "prepend": "Search Engine: ",
             "replay": {
                 "schedule": "0 9 * * 1",
-                "replayStartDate": "Mon, 01 Jan 2024 09:00:00 +0000",
-                "originalStartDate": "Mon, 01 Jan 2018 09:00:00 +0000"
-            }
+                "replayStartDate": "Mon, 06 Jan 2025 09:00:00 +0000",
+                "originalStartDate": "Mon, 06 Jan 2020 09:00:00 +0000"
+            },
+            "disabled": "true"
         }
     ],
     "files": [
         {
-            "url": "https://example.com/path/to/audio.mp3",
-            "title": "Title to Display in Podcatcher",
-            "pubDate": "Tue, 01 Mar 2024 22:30:00 +0000",
-            "description": "Lorem ipsum dolor sit amet"
+            "url": "https://example.com/audio/private-briefing.mp3",
+            "title": "Private Briefing (replace with your own audio URL)",
+            "pubDate": "Sun, 29 Mar 2026 22:30:00 +0000",
+            "description": "Example of a synthetic file-backed item. Replace this URL and metadata with your own hosted audio."
+        },
+        {
+            "url": "https://example.com/audio/bonus-episode.mp3",
+            "title": "Disabled File Example",
+            "pubDate": "Sat, 28 Mar 2026 22:30:00 +0000",
+            "description": "Example of a disabled file-backed item.",
+            "disabled": "true"
         }
     ],
     "channel": {
-        "title": "Title of Your Custom Feed",
-        "link": "https://github.com/insanityfarm/podquilt",
-        "description": "My custom podcast feed from Podquilt"
+        "title": "My Morning Queue",
+        "link": "https://podquilt.example.com/feed",
+        "description": "A single feed for the shows I actually want to keep up with."
     },
     "logs": {
         "enabled": true,
         "level": 4,
         "path": "logs/podquilt.log"
+    },
+    "http": {
+        "max_concurrent_requests": 6
     }
 }

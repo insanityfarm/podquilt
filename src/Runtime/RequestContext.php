@@ -33,7 +33,7 @@ final readonly class RequestContext
     }
 
     /**
-     * Preserves the historical default channel link shape used by Podquilt.
+     * Builds the default channel link from the server name and request URI.
      */
     public function defaultChannelLink(): string
     {

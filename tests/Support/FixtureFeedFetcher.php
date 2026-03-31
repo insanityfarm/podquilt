@@ -6,24 +6,65 @@ namespace Podquilt\Tests\Support;
 
 use Podquilt\Http\FeedFetcherInterface;
 use Podquilt\Http\FetchResult;
-use Uri\Rfc3986\Uri;
 
 /**
- * Maps URLs to canned responses so feed-processing tests stay hermetic.
+ * Maps URLs to canned responses so feed-processing tests stay hermetic and deterministic.
  */
-final readonly class FixtureFeedFetcher implements FeedFetcherInterface
+final class FixtureFeedFetcher implements FeedFetcherInterface
 {
+    private ?int $lastMaxConcurrentRequests = null;
+
     /**
      * @param array<string, FetchResult> $responses
+     * @param list<string>|null $resultUrlOrder
+     * @param list<string> $omittedResultUrls
      */
     public function __construct(
         private array $responses,
+        private ?array $resultUrlOrder = null,
+        private array $omittedResultUrls = [],
     ) {
     }
 
     #[\Override]
-    public function fetch(Uri $uri, string $userAgent): FetchResult
+    public function fetchMany(array $requests, int $maxConcurrentRequests): array
     {
-        return $this->responses[$uri->toString()] ?? new FetchResult(404, '');
+        $this->lastMaxConcurrentRequests = $maxConcurrentRequests;
+        $resultsByUrl = [];
+
+        foreach ($requests as $request) {
+            $resultsByUrl[$request->uri->toString()] = [
+                'id' => $request->id,
+                'result' => $this->responses[$request->uri->toString()] ?? new FetchResult(404, ''),
+            ];
+        }
+
+        $orderedUrls = $this->resultUrlOrder ?? array_keys($resultsByUrl);
+        $results = [];
+
+        foreach ($orderedUrls as $url) {
+            if (!array_key_exists($url, $resultsByUrl) || in_array($url, $this->omittedResultUrls, true)) {
+                continue;
+            }
+
+            $results[$resultsByUrl[$url]['id']] = $resultsByUrl[$url]['result'];
+        }
+
+        foreach ($resultsByUrl as $url => $resultByUrl) {
+            if (in_array($url, $this->omittedResultUrls, true)) {
+                continue;
+            }
+
+            if (!array_key_exists($resultByUrl['id'], $results)) {
+                $results[$resultByUrl['id']] = $resultByUrl['result'];
+            }
+        }
+
+        return $results;
+    }
+
+    public function lastMaxConcurrentRequests(): ?int
+    {
+        return $this->lastMaxConcurrentRequests;
     }
 }

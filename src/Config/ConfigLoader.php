@@ -9,7 +9,7 @@ use Podquilt\Logging\LogLevel;
 use Podquilt\Runtime\RequestContext;
 
 /**
- * Loads config.json into typed immutable DTOs while preserving the existing public schema.
+ * Loads config.json into typed immutable DTOs.
  */
 final readonly class ConfigLoader
 {
@@ -34,11 +34,15 @@ final readonly class ConfigLoader
             throw new ConfigException('Unable to read config.json. Please check that is is properly formatted and try again.');
         }
 
+        $warnings = [];
+
         return new AppConfig(
             channel: $this->loadChannel($payload['channel'] ?? null, $requestContext),
             feeds: $this->loadFeeds($payload['feeds'] ?? []),
             files: $this->loadFiles($payload['files'] ?? []),
             logs: $this->loadLogs($payload['logs'] ?? null),
+            http: $this->loadHttp($payload['http'] ?? null, $warnings),
+            warnings: $warnings,
         );
     }
 
@@ -122,6 +126,42 @@ final readonly class ConfigLoader
             level: is_scalar($configuredLevel) ? LogLevel::fromInt((int) $configuredLevel) : $defaults->level,
             path: $this->stringOrDefault($logs['path'] ?? null, $defaults->path),
         );
+    }
+
+    /**
+     * @param list<string> $warnings
+     */
+    private function loadHttp(mixed $value, array &$warnings): HttpConfig
+    {
+        $http = is_array($value) ? $value : [];
+        $defaults = HttpConfig::defaults();
+        $configuredConcurrency = $http['max_concurrent_requests'] ?? null;
+
+        if ($configuredConcurrency === null) {
+            return $defaults;
+        }
+
+        if (!is_scalar($configuredConcurrency)) {
+            $warnings[] = sprintf(
+                'Invalid http.max_concurrent_requests value. Using default of %d.',
+                HttpConfig::DEFAULT_MAX_CONCURRENT_REQUESTS,
+            );
+
+            return $defaults;
+        }
+
+        $maxConcurrentRequests = (int) $configuredConcurrency;
+
+        if ($maxConcurrentRequests <= 0) {
+            $warnings[] = sprintf(
+                'Invalid http.max_concurrent_requests value. Using default of %d.',
+                HttpConfig::DEFAULT_MAX_CONCURRENT_REQUESTS,
+            );
+
+            return $defaults;
+        }
+
+        return new HttpConfig($maxConcurrentRequests);
     }
 
     /**

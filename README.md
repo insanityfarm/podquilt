@@ -1,163 +1,350 @@
 # Podquilt
 
-Podquilt merges multiple podcast feeds into one personal RSS feed. It is driven by a local `config.json`, preserves the original item XML where possible, and applies deterministic filtering, replay scheduling, and file-backed synthetic items before publishing a single RSS document.
+Podquilt turns a pile of podcast feeds into one calm, curated feed that feels like it was made just for you. Point it at the shows you care about, hide the trailer noise, cap each source to a sane number of recent episodes, replay an archive on a schedule, and even sprinkle in your own file-backed audio links. The result is plain old RSS, which means your podcast app keeps working exactly the way you expect.
 
-## Features
+It is especially useful when your listening habits do not line up with how publishers ship their feeds. Maybe you want a single "morning queue" made from several shows. Maybe you love an old program and want it to reappear one episode at a time every Monday. Maybe you need a private feed that mixes public podcasts with a few direct MP3 links. Podquilt is built for that kind of practical feed reshaping without asking you to move into a hosted platform.
 
-- Merge any number of remote podcast feeds into one RSS feed
-- Limit items per source and cap retention by age
-- Filter items by arbitrary RSS node names, including namespaced nodes such as `itunes:episodeType`
-- Replay archived shows on a cron schedule without changing the source feed
-- Add one-off file-backed episodes directly from `config.json`
-- Log invalid feeds, replay configuration errors, and request timing
+Behind the scenes, Podquilt parses and rewrites feeds with PHP 8.5's DOM support, validates URLs with PHP 8.5's URI support, fetches remote feeds concurrently for better responsiveness, and produces the same merged feed for the same config.
 
 ## Requirements
 
+Podquilt is intentionally lightweight. You need:
+
 - PHP 8.5
 - Composer 2
-- PHP extensions:
-  - `dom`
-  - `hash`
-  - `json`
-  - `libxml`
-- Docker Desktop with `docker compose` is optional but fully supported
+- PHP extensions: `dom`, `hash`, `json`, and `libxml`
+- Docker Desktop with `docker compose` if you want the containerized workflow
+
+Docker is the easiest way to get a predictable environment. A system-PHP workflow is equally supported if you already have PHP 8.5 and Composer installed locally.
 
 ## Quick Start
 
-1. Copy `config.json.example` to `config.json`.
-2. Edit `config.json` with your own feed sources.
-3. Choose either the Docker or system-PHP workflow below.
+Start by copying the example config:
 
-### Docker Workflow
+```bash
+cp config.json.example config.json
+```
 
-Install dependencies:
+Then edit `config.json` with your own feed URLs and preferences.
+
+If you want the most reproducible setup, use Docker:
 
 ```bash
 docker compose run --rm app composer install
-```
-
-Start the development server:
-
-```bash
 docker compose up
 ```
 
 Podquilt will be available at [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
-Run the full verification suite:
+If you prefer to run directly on your machine:
+
+```bash
+composer install
+composer serve
+```
+
+Either way, the app reads `config.json`, fetches your configured feeds, and emits a single RSS document from the project root.
+
+## Everyday Development
+
+Composer is the public task runner for the project. The most useful commands are:
+
+- `composer serve` starts the PHP built-in server on port `8000`
+- `composer test` runs the fixture-driven PHPUnit regression suite
+- `composer analyse` runs PHPStan with the project's strict configuration
+- `composer format` applies the PHP CS Fixer rules
+- `composer check` runs tests, static analysis, and a dry-run formatting check
+- `composer audit` checks dependencies for published security advisories
+
+With Docker, the same commands are available through `docker compose run --rm app composer ...`, for example:
 
 ```bash
 docker compose run --rm app composer check
 docker compose run --rm app composer audit
 ```
 
-### System PHP Workflow
+## Configuration Guide
 
-Install dependencies:
+Podquilt's public schema lives in `config.json`. The file is intentionally small, but a few keys have precise behavior that is worth understanding before you start tuning it.
 
-```bash
-composer install
-```
+At the top level, Podquilt recognizes five sections:
 
-Start the development server:
+- `feeds`
+- `files`
+- `channel`
+- `logs`
+- `http`
 
-```bash
-composer serve
-```
-
-Run the verification suite:
-
-```bash
-composer check
-composer audit
-```
-
-## Configuration
-
-The public configuration schema remains file-based and lives in `config.json`.
+Unknown keys are ignored.
 
 ### `feeds`
 
-Remote podcast feeds to merge.
+The `feeds` section is where most of the personality of a Podquilt instance lives. Each entry describes one remote RSS feed and the rules Podquilt should apply when deciding which items from that feed belong in the merged output.
 
 Supported keys:
 
-- `url`
-- `prepend`
-- `item_limit`
-- `item_max_age`
-- `filter`
-- `replay`
-- `disabled`
+- `url`: string, required in practice. Must be an absolute `http` or `https` URL.
+- `prepend`: string or omitted. If present and non-empty, Podquilt prefixes each selected item's direct `title` and direct `itunes:title` nodes when present.
+- `item_limit`: integer or omitted. Defaults to `10`. Values above `10` are clamped to `10`.
+- `item_max_age`: integer or omitted. Defaults to `14`. Values above `14` are clamped to `14`.
+- `filter`: object keyed by RSS node name. Each value is treated as a case-insensitive regular expression.
+- `replay`: object or omitted. When present, replay scheduling is enabled for that source.
+- `disabled`: string or omitted. Only the literal string `"true"` disables the feed.
+
+Some details matter:
+
+- Filters are evaluated against the parsed item field map. If a field exists and does not match its regex, the item is excluded.
+- If a filtered field is missing entirely, Podquilt does not exclude the item for that reason alone.
+- Replay reverses the item order for scheduling, rewrites `pubDate`, and respects item limits and age checks.
+
+Example:
+
+```json
+{
+  "feeds": [
+    {
+      "url": "https://feeds.npr.org/510318/podcast.xml",
+      "prepend": "Up First: ",
+      "item_max_age": 3
+    },
+    {
+      "url": "https://feeds.99percentinvisible.org/99percentinvisible",
+      "prepend": "99% Invisible: ",
+      "item_limit": 5,
+      "filter": {
+        "title": "^((?!Service Request).)*$"
+      }
+    }
+  ]
+}
+```
+
+In plain English, that example says: "Keep only the last few days of Up First, make the titles easy to spot in my player, and also pull in 99% Invisible while skipping episodes whose titles contain `Service Request`."
+
+Replay example:
+
+```json
+{
+  "feeds": [
+    {
+      "url": "https://feeds.megaphone.fm/search-engine",
+      "replay": {
+        "schedule": "0 9 * * 1",
+        "replayStartDate": "Mon, 06 Jan 2025 09:00:00 +0000",
+        "originalStartDate": "Mon, 06 Jan 2020 09:00:00 +0000"
+      },
+      "disabled": "true"
+    }
+  ]
+}
+```
+
+That configuration shows the `replay` syntax together with a disabled feed example. It keeps the feed turned off until you are ready, then replays older episodes on the supplied cron schedule starting from the replay start date.
 
 ### `files`
 
-Synthetic RSS items backed by a direct media URL.
+The `files` section lets you create synthetic RSS items from direct media URLs. This is useful when you want to tuck a private recording, a special one-off audio file, or a manually hosted episode into the same feed as your remote sources.
 
 Supported keys:
 
-- `url`
-- `title`
-- `pubDate`
-- `description`
-- `disabled`
+- `url`: string, required in practice. Must be an absolute URI.
+- `title`: string, required in practice.
+- `pubDate`: string, required in practice. Must be an RSS timestamp such as `Sun, 29 Mar 2026 22:30:00 +0000`.
+- `description`: string, required in practice.
+- `disabled`: string or omitted. Only the literal string `"true"` disables the file item.
+
+Synthetic file items are subject to Podquilt's built-in age window. Items older than 14 days, or dated in the future, are skipped to match the rest of the feed-merging logic.
+
+Example:
+
+```json
+{
+  "files": [
+    {
+      "url": "https://example.com/audio/private-briefing.mp3",
+      "title": "Private Briefing (replace with your own audio URL)",
+      "pubDate": "Sun, 29 Mar 2026 22:30:00 +0000",
+      "description": "Example of a synthetic file-backed item. Replace this URL and metadata with your own hosted audio."
+    }
+  ]
+}
+```
+
+This is a nice fit for small personal publishing workflows: host an MP3 somewhere stable, describe it in `config.json`, and it becomes another item in the merged feed.
 
 ### `channel`
 
-RSS channel metadata for the merged output.
+The `channel` section controls the metadata of the final combined RSS feed. It is small, but it shapes how the feed appears in podcast apps.
 
 Supported keys:
 
-- `title`
-- `link`
-- `description`
+- `title`: string, optional. Defaults to `Podquilt`.
+- `link`: string, optional. Defaults to the current request host and path.
+- `description`: string, optional. Defaults to `Your description here.`
+
+Example:
+
+```json
+{
+  "channel": {
+    "title": "My Morning Queue",
+    "link": "https://podquilt.example.com/feed",
+    "description": "A single feed for the shows I actually want to keep up with."
+  }
+}
+```
+
+If you are sharing the merged feed with another person, this is the section that makes it feel polished instead of anonymous.
 
 ### `logs`
 
-File-based logging configuration.
+The `logs` section controls Podquilt's file-backed operational logging. Logs are useful for catching invalid URLs, replay misconfiguration, and upstream feed failures without dumping noise into the RSS response itself.
 
 Supported keys:
 
-- `enabled`
-- `level`
-- `path`
+- `enabled`: boolean, optional. Defaults to `true`.
+- `level`: integer, optional. Defaults to `1`.
+- `path`: string, optional. Defaults to `logs/podquilt.log`.
 
-## Example Config
+Log levels are numeric:
 
-See [config.json.example](config.json.example) for a full example, including feed filtering, disabled sources, replay scheduling, and file-backed episodes.
+- `1`: errors only
+- `2`: errors and warnings
+- `3`: errors, warnings, and notices
+- `4`: errors, warnings, notices, and informational messages
 
-## Development Commands
+Relative paths are resolved from the project root. Absolute paths are used as-is.
 
-- `composer serve`: Run the PHP built-in server on port `8000`
-- `composer test`: Run the PHPUnit regression suite
-- `composer analyse`: Run PHPStan at the strict project level
-- `composer format`: Apply PHP CS Fixer rules
-- `composer check`: Run tests, static analysis, and dry-run formatting
-- `composer audit`: Check dependencies for published security advisories
+Example:
 
-## Testing Strategy
+```json
+{
+  "logs": {
+    "enabled": true,
+    "level": 4,
+    "path": "logs/podquilt.log"
+  }
+}
+```
 
-The test suite is intentionally fixture-driven:
+That setting is handy during development because it records the full story of what Podquilt did for each request, including concurrent feed fetch activity and configuration warnings.
 
-- No automated test hits a live podcast feed
-- Time-sensitive behavior uses a frozen clock
-- End-to-end golden tests assert the final rendered RSS output
-- PHP warnings, notices, and deprecations fail the suite
+### `http`
+
+The `http` section contains runtime tuning for remote feed fetching.
+
+Supported keys:
+
+- `max_concurrent_requests`: positive integer, optional. Defaults to `6`.
+
+Podquilt fetches remote feeds concurrently. This setting caps how many feed requests Podquilt will keep in flight at once.
+
+Behavior notes:
+
+- Omitting the key uses the default of `6`.
+- Invalid, zero, or negative values fall back to `6`.
+- When a fallback happens, Podquilt logs a warning instead of failing the request.
+
+Example:
+
+```json
+{
+  "http": {
+    "max_concurrent_requests": 4
+  }
+}
+```
+
+That is a good conservative setting when you have a modest number of feeds and want a little parallelism without being too aggressive. If you aggregate a larger set of shows, raising it can reduce total response time, but the ideal value depends on how quickly your upstream feeds answer.
+
+## Full Example
+
+Here is a representative configuration that uses every public section:
+
+```json
+{
+  "feeds": [
+    {
+      "url": "https://feeds.npr.org/510318/podcast.xml",
+      "prepend": "Up First: ",
+      "item_max_age": 3
+    },
+    {
+      "url": "https://feeds.npr.org/510289/podcast.xml",
+      "prepend": "Planet Money: ",
+      "item_limit": 5
+    },
+    {
+      "url": "https://feeds.99percentinvisible.org/99percentinvisible",
+      "prepend": "99% Invisible: ",
+      "item_limit": 5,
+      "filter": {
+        "title": "^((?!Service Request).)*$"
+      }
+    },
+    {
+      "url": "https://feeds.megaphone.fm/search-engine",
+      "prepend": "Search Engine: ",
+      "replay": {
+        "schedule": "0 9 * * 1",
+        "replayStartDate": "Mon, 06 Jan 2025 09:00:00 +0000",
+        "originalStartDate": "Mon, 06 Jan 2020 09:00:00 +0000"
+      },
+      "disabled": "true"
+    }
+  ],
+  "files": [
+    {
+      "url": "https://example.com/audio/private-briefing.mp3",
+      "title": "Private Briefing (replace with your own audio URL)",
+      "pubDate": "Sun, 29 Mar 2026 22:30:00 +0000",
+      "description": "Example of a synthetic file-backed item. Replace this URL and metadata with your own hosted audio."
+    },
+    {
+      "url": "https://example.com/audio/bonus-episode.mp3",
+      "title": "Disabled File Example",
+      "pubDate": "Sat, 28 Mar 2026 22:30:00 +0000",
+      "description": "Example of a disabled file-backed item.",
+      "disabled": "true"
+    }
+  ],
+  "channel": {
+    "title": "My Morning Queue",
+    "link": "https://podquilt.example.com/feed",
+    "description": "A single feed for the shows I actually want to keep up with."
+  },
+  "logs": {
+    "enabled": true,
+    "level": 4,
+    "path": "logs/podquilt.log"
+  },
+  "http": {
+    "max_concurrent_requests": 6
+  }
+}
+```
+
+See [config.json.example](config.json.example) for the tracked example file that ships with the repository.
+
+## Testing Philosophy
+
+Podquilt's regression suite is intentionally fixture-driven. No automated test reaches out to live podcast feeds, time-sensitive behavior is exercised with a frozen clock, and end-to-end golden tests assert the final rendered RSS output. Warnings, notices, and deprecations are treated as failures so PHP upgrades do not quietly erode behavior over time.
+
+That means you can refactor aggressively, including around XML handling and fetch orchestration, without having to guess whether the emitted feed still matches the contract your listeners rely on.
 
 ## CI
 
-GitHub Actions runs the following on PHP 8.5:
+GitHub Actions verifies the project on PHP 8.5 by running:
 
 - `composer validate --strict`
-- `composer install`
 - `composer check`
 - `composer audit`
 
 ## Operational Notes
 
-- Feed aggregation speed depends on the configured remote sources. Slow first responses are often caused by upstream feeds, not local boot issues.
-- Podquilt uses the PHP 8.5 URI extension to validate configured URLs before fetching them.
-- Replay behavior intentionally preserves the historical Podquilt semantics so existing configs continue to work.
+Podquilt is at the mercy of upstream publishers. Concurrent fetching helps a lot, but it does not make a dead or very slow feed disappear. If one source fails, Podquilt continues processing the others and logs the failure.
+
+URL validation is handled through PHP 8.5's URI support rather than ad hoc filtering, and replay scheduling follows the rules described in the configuration guide.
 
 ## License
 

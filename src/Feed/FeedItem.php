@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DOMDocument;
 use DOMElement;
+use DOMNode;
 use RuntimeException;
 
 /**
@@ -44,6 +45,29 @@ final readonly class FeedItem
         return new self($document, $fields, $publishedAt);
     }
 
+    public static function fromXmlFragment(string $xml): ?self
+    {
+        $document = new DOMDocument('1.0', 'UTF-8');
+        $document->recover = true;
+        $document->strictErrorChecking = false;
+
+        libxml_use_internal_errors(true);
+        $loaded = $document->loadXML($xml, LIBXML_PARSEHUGE | LIBXML_NOWARNING | LIBXML_NOERROR | LIBXML_NONET);
+        libxml_clear_errors();
+
+        if ($loaded !== true) {
+            return null;
+        }
+
+        $root = $document->documentElement;
+
+        if (!$root instanceof DOMElement || $root->nodeName !== 'item') {
+            return null;
+        }
+
+        return self::fromDomElement($root);
+    }
+
     /**
      * Builds a feed item from synthetic config-backed file source values.
      */
@@ -57,9 +81,11 @@ final readonly class FeedItem
         $item = $document->createElement('item');
         $document->appendChild($item);
 
-        $item->appendChild($document->createElement('title', $title));
-        $item->appendChild($document->createElement('description', $description));
-        $item->appendChild($document->createElement('pubDate', $publishedAt->format(DateTimeInterface::RSS)));
+        $item->appendChild(self::createTextElement($document, 'title', $title));
+        $item->appendChild(self::createTextElement($document, 'description', $description));
+        $item->appendChild(
+            self::createTextElement($document, 'pubDate', $publishedAt->format(DateTimeInterface::RSS)),
+        );
 
         $enclosure = $document->createElement('enclosure');
         $enclosure->setAttribute('url', $url);
@@ -83,6 +109,11 @@ final readonly class FeedItem
         return $node;
     }
 
+    public function xml(): string
+    {
+        return (string) $this->document->saveXML($this->node());
+    }
+
     public function fieldValue(string $nodeName): ?string
     {
         return $this->fields[$nodeName] ?? null;
@@ -92,14 +123,27 @@ final readonly class FeedItem
     public function withPrependedTitle(string $prefix): self
     {
         $document = $this->duplicateDocument();
+        $root = self::rootElement($document);
+        $mutated = false;
 
-        foreach ($document->getElementsByTagName('title') as $titleNode) {
+        foreach (['title', 'itunes:title'] as $nodeName) {
+            $titleNode = self::directChildElement($root, $nodeName);
+
+            if ($titleNode === null) {
+                continue;
+            }
+
             $titleNode->nodeValue = $prefix . $titleNode->nodeValue;
+            $mutated = true;
+        }
+
+        if (!$mutated) {
+            return $this;
         }
 
         return clone($this, [
             'document' => $document,
-            'fields' => self::extractFields(self::rootElement($document)),
+            'fields' => self::extractFields($root),
         ]);
     }
 
@@ -108,15 +152,15 @@ final readonly class FeedItem
     {
         $document = $this->duplicateDocument();
         $root = self::rootElement($document);
-        $guidNodes = $document->getElementsByTagName('guid');
+        $guidNode = self::directChildElement($root, 'guid');
 
-        if ($guidNodes->length > 0) {
-            foreach ($guidNodes as $guidNode) {
-                $guidNode->nodeValue = hash(self::GUID_HASH_ALGORITHM, (string) $guidNode->nodeValue);
-            }
+        if ($guidNode !== null) {
+            $guidNode->nodeValue = hash(self::GUID_HASH_ALGORITHM, (string) $guidNode->nodeValue);
         } else {
             $guidSource = ($this->fieldValue('title') ?? '') . ($this->fieldValue('description') ?? '');
-            $root->appendChild($document->createElement('guid', hash(self::GUID_HASH_ALGORITHM, $guidSource)));
+            $root->appendChild(
+                self::createTextElement($document, 'guid', hash(self::GUID_HASH_ALGORITHM, $guidSource)),
+            );
         }
 
         return clone($this, [
@@ -129,21 +173,19 @@ final readonly class FeedItem
     public function withPublishedAt(DateTimeImmutable $publishedAt): self
     {
         $document = $this->duplicateDocument();
-        $pubDateNodes = $document->getElementsByTagName('pubDate');
+        $root = self::rootElement($document);
+        $pubDateNode = self::directChildElement($root, 'pubDate');
+        $formatted = $publishedAt->format(DateTimeInterface::RSS);
 
-        if ($pubDateNodes->length > 0) {
-            foreach ($pubDateNodes as $pubDateNode) {
-                $pubDateNode->nodeValue = $publishedAt->format(DateTimeInterface::RSS);
-            }
+        if ($pubDateNode !== null) {
+            $pubDateNode->nodeValue = $formatted;
         } else {
-            self::rootElement($document)->appendChild(
-                $document->createElement('pubDate', $publishedAt->format(DateTimeInterface::RSS)),
-            );
+            $root->appendChild(self::createTextElement($document, 'pubDate', $formatted));
         }
 
         return clone($this, [
             'document' => $document,
-            'fields' => self::extractFields(self::rootElement($document)),
+            'fields' => self::extractFields($root),
             'publishedAt' => $publishedAt,
         ]);
     }
@@ -194,5 +236,29 @@ final readonly class FeedItem
         }
 
         return $root;
+    }
+
+    private static function directChildElement(DOMElement $parent, string $nodeName): ?DOMElement
+    {
+        foreach ($parent->childNodes as $childNode) {
+            if (
+                $childNode instanceof DOMElement
+                && $childNode->parentNode instanceof DOMNode
+                && $childNode->parentNode->isSameNode($parent)
+                && $childNode->nodeName === $nodeName
+            ) {
+                return $childNode;
+            }
+        }
+
+        return null;
+    }
+
+    private static function createTextElement(DOMDocument $document, string $nodeName, string $value): DOMElement
+    {
+        $element = $document->createElement($nodeName);
+        $element->appendChild($document->createTextNode($value));
+
+        return $element;
     }
 }

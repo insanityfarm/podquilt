@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Podquilt\Logging;
 
 /**
- * Matches the historical numeric log levels while giving the rest of the code a typed API.
+ * Defines the numeric log levels used throughout Podquilt.
  */
 enum LogLevel: int
 {

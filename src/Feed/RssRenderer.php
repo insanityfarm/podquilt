@@ -25,15 +25,11 @@ final readonly class RssRenderer
         $rss->setAttribute('version', '2.0');
         $document->appendChild($rss);
 
-        foreach ($this->collectNamespaces($items) as $prefix => $namespaceUri) {
-            $rss->setAttribute('xmlns:' . $prefix, $namespaceUri);
-        }
-
         $channel = $document->createElement('channel');
         $rss->appendChild($channel);
 
         foreach ($channelConfig->toElementMap() as $key => $value) {
-            $channel->appendChild($document->createElement($key, $value));
+            $channel->appendChild($this->createTextElement($document, $key, $value));
         }
 
         foreach ($items as $item) {
@@ -43,42 +39,11 @@ final readonly class RssRenderer
         return (string) $document->saveXML();
     }
 
-    /**
-     * @param list<FeedItem> $items
-     * @return array<string, string>
-     */
-    private function collectNamespaces(array $items): array
+    private function createTextElement(DOMDocument $document, string $nodeName, string $value): DOMElement
     {
-        $namespaces = [];
+        $element = $document->createElement($nodeName);
+        $element->appendChild($document->createTextNode($value));
 
-        foreach ($items as $item) {
-            $this->collectNamespacesFromElement($item->node(), $namespaces);
-        }
-
-        ksort($namespaces);
-
-        return $namespaces;
-    }
-
-    /**
-     * @param array<string, string> $namespaces
-     */
-    private function collectNamespacesFromElement(DOMElement $element, array &$namespaces): void
-    {
-        $prefix = $element->prefix;
-
-        if ($prefix !== '') {
-            $namespaceUri = (string) $element->namespaceURI;
-
-            if ($namespaceUri !== '') {
-                $namespaces[$prefix] = $namespaceUri;
-            }
-        }
-
-        foreach ($element->childNodes as $childNode) {
-            if ($childNode instanceof DOMElement) {
-                $this->collectNamespacesFromElement($childNode, $namespaces);
-            }
-        }
+        return $element;
     }
 }

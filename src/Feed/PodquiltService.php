@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace Podquilt\Feed;
 
 use Podquilt\Config\AppConfig;
+use Podquilt\Http\FeedFetcherInterface;
 use Podquilt\Logging\LoggerInterface;
 use Podquilt\Runtime\RequestContext;
 
 /**
- * Orchestrates all configured sources and renders the final aggregated RSS feed.
+ * Orchestrates source preparation, bounded remote fetching, and final RSS rendering for a request.
  */
 final readonly class PodquiltService
 {
     public function __construct(
         private RemoteFeedSourceProcessor $remoteProcessor,
         private FileFeedSourceProcessor $fileProcessor,
+        private FeedFetcherInterface $feedFetcher,
         private RssRenderer $renderer,
     ) {
     }
@@ -26,16 +28,38 @@ final readonly class PodquiltService
         LoggerInterface $logger,
     ): string {
         $items = [];
+        $preparedRemoteFeeds = [];
+        $remoteRequests = [];
 
-        foreach ($config->feeds as $source) {
+        foreach ($config->feeds as $index => $source) {
             if (!$source->isEnabled()) {
                 continue;
             }
 
-            $items = [
-                ...$items,
-                ...$this->remoteProcessor->collectItems($source, $logger, $requestContext),
-            ];
+            $preparedFeed = $this->remoteProcessor->prepareFeed($index, $source, $requestContext);
+            $preparedRemoteFeeds[] = $preparedFeed;
+
+            if ($preparedFeed->request !== null) {
+                $remoteRequests[] = $preparedFeed->request;
+            }
+        }
+
+        $fetchResults = $this->feedFetcher->fetchMany($remoteRequests, $config->http->maxConcurrentRequests);
+
+        foreach ($preparedRemoteFeeds as $preparedFeed) {
+            $fetchResult = $preparedFeed->resolveFetchResult($fetchResults);
+
+            if ($fetchResult !== null) {
+                $this->appendItems(
+                    $items,
+                    $this->remoteProcessor->collectItemsFromFetchResult(
+                        $preparedFeed,
+                        $fetchResult,
+                    ),
+                );
+            }
+
+            $preparedFeed->flushLogsTo($logger);
         }
 
         foreach ($config->files as $source) {
@@ -43,10 +67,7 @@ final readonly class PodquiltService
                 continue;
             }
 
-            $items = [
-                ...$items,
-                ...$this->fileProcessor->collectItems($source, $logger, $requestContext),
-            ];
+            $this->appendItems($items, $this->fileProcessor->collectItems($source, $logger));
         }
 
         usort(
@@ -55,5 +76,16 @@ final readonly class PodquiltService
         );
 
         return $this->renderer->render($config->channel, $items);
+    }
+
+    /**
+     * @param list<FeedItem> $items
+     * @param list<FeedItem> $itemsToAppend
+     */
+    private function appendItems(array &$items, array $itemsToAppend): void
+    {
+        foreach ($itemsToAppend as $item) {
+            $items[] = $item;
+        }
     }
 }

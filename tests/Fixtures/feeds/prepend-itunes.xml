@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>Prepend Feed</title>
+    <item>
+      <title>Visible Title</title>
+      <itunes:title>Player Title</itunes:title>
+      <description>Episode description.</description>
+      <pubDate>Sun, 31 Mar 2024 10:00:00 +0000</pubDate>
+      <guid>prepend-guid</guid>
+    </item>
+  </channel>
+</rss>

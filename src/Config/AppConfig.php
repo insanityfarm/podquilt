@@ -12,12 +12,15 @@ final readonly class AppConfig
     /**
      * @param list<FeedSourceConfig> $feeds
      * @param list<FileSourceConfig> $files
+     * @param list<string> $warnings
      */
     public function __construct(
         public ChannelConfig $channel,
         public array $feeds,
         public array $files,
         public LogConfig $logs,
+        public HttpConfig $http,
+        public array $warnings = [],
     ) {
     }
 }
